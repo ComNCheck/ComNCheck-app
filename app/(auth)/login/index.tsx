@@ -6,7 +6,7 @@ export default function Login() {
   return (
     <View className="flex-1 flex-col justify-center items-center bg-white">
       <Image
-        source={require("../../assets/images/logo-2x.png")}
+        source={require("@/assets/images/logo-2x.png")}
         className="w-32 h-32 rounded-xl"
         style={{ width: 128, height: 128 }}
       />
@@ -16,7 +16,7 @@ export default function Login() {
       </Text>
       <TouchableOpacity
         style={[styles.button]}
-        onPress={() => router.push("/(tabs)")} //임시 라우팅
+        onPress={() => router.push("/(auth)/login/first")} //임시 라우팅
       >
         <Image
           source={require("@/assets/images/google.png")}
@@ -24,6 +24,17 @@ export default function Login() {
         />
         <Text style={styles.font}>Sign up with google</Text>
       </TouchableOpacity>
+      <View className="flex-row items-center justify-center gap-2">
+        <Text className="text-[#B6B6B6] text-lg">
+          아직 학교 계정이 없으신가요?
+        </Text>
+        <Text
+          className="text-text font-semibold"
+          onPress={() => router.push("/(tabs)")} //임시 라우팅
+        >
+          관리자에게 문의하기
+        </Text>
+      </View>
     </View>
   );
 }
@@ -47,6 +58,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginTop: 10,
+    marginBottom: 10,
   },
   font: {
     fontWeight: "medium",
