@@ -2,7 +2,7 @@ import React from "react";
 import { View } from "react-native";
 
 interface HeaderBarProps {
-  left: React.ReactNode; // 왼쪽에 들어갈 (텍스트/이미지)
+  left?: React.ReactNode; // 왼쪽에 들어갈 (텍스트/이미지)
   children?: React.ReactNode; // 오른쪽 (버튼/아이콘 등)
 }
 
