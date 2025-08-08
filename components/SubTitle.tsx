@@ -1,0 +1,14 @@
+import { Text, View } from "react-native";
+
+interface SubTitleProps {
+  title: string;
+  description: string;
+}
+export default function SubTitle({ title, description }: SubTitleProps) {
+  return (
+    <View className="flex-col items-start">
+      <Text className="font-semibold text-xl text-text">{title}</Text>
+      <Text className="font-medium text-lg text-[#b6b6b6]">{description}</Text>
+    </View>
+  );
+}
