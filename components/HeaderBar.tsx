@@ -15,7 +15,7 @@ export default function HeaderBar({
   return (
     <View
       style={{ backgroundColor: backgroundColor }}
-      className="absolute top-0 left-0 right-0 z-50 h-55 pt-16 pb-6 px-4 flex-row justify-between items-center"
+      className="absolute top-0 left-0 right-0 z-50 h-55 pt-20 pb-6 px-6 flex-row justify-between items-center"
     >
       <View className="flex-row items-center">{left}</View>
       <View className="flex-row items-center">{children}</View>

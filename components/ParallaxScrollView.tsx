@@ -29,7 +29,7 @@ export default function ParallaxScrollView({ children, headerBar }: Props) {
         }}
         scrollIndicatorInsets={{ bottom }}
       >
-        <ThemedView className="flex-1 p-4 gap-4 overflow-hidden">
+        <ThemedView className="flex-1 p-6 gap-4 overflow-hidden">
           {children}
         </ThemedView>
       </Animated.ScrollView>
