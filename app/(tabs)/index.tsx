@@ -1,15 +1,28 @@
+import HeaderBar from "@/components/HeaderBar";
+import NoticeTitle from "@/components/NoticeTitle";
+import ParallaxScrollView from "@/components/ParallaxScrollView";
+import { useRouter } from "expo-router";
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { Text } from "react-native";
 
 const HomeScreen = () => {
+  const router = useRouter();
   return (
-    <View className="flex-1 justify-center">
-      <Text>index</Text>
-      <View className="w-10 h-10 bg-blue-500"></View>
-    </View>
+    <ParallaxScrollView
+      headerBar={
+        <HeaderBar
+          backgroundColor="#fafafa"
+          left={<Text className="text-3xl font-extrabold">공지</Text>}
+        />
+      }
+    >
+      <NoticeTitle
+        title="과행사 공지 확인하기"
+        show="전체보기"
+        onPress={() => router.push("/(tabs)")} //임시 라우팅
+      ></NoticeTitle>
+    </ParallaxScrollView>
   );
 };
 
 export default HomeScreen;
-
-const styles = StyleSheet.create({});
