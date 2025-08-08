@@ -23,7 +23,6 @@ export default function ParallaxScrollView({ children, headerBar }: Props) {
       </View>
       <Animated.ScrollView
         scrollEventThrottle={16}
-        //scrollIndicatorInsets={{ bottom }}
         contentContainerStyle={{
           paddingTop: HEADER_HEIGHT,
           paddingBottom: bottom,
