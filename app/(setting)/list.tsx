@@ -4,7 +4,7 @@ import CouncilName from "@/components/ui/CouncilName";
 import ShadowBox from "@/components/ui/ShadowBox";
 import SettinglView from "@/components/view/SettingView";
 import { useRouter } from "expo-router";
-import { FlatList, Text, View } from "react-native";
+import { Text, View } from "react-native";
 
 export default function ListScreen() {
   const router = useRouter();
@@ -33,22 +33,20 @@ export default function ListScreen() {
                 {councilData.find((item) => item.position === "과회장")?.name}
               </Text>
               <Text className="font-black text-lg">️🎁 학생회 </Text>
-              <View className="flex-1">
-                <FlatList
-                  data={councilData.filter(
-                    (item) => item.position !== "과회장"
-                  )}
-                  keyExtractor={(item, index) => index.toString()}
-                  numColumns={2}
-                  className="border-[#FAFAFA] border-[2px] rounded-xl p-4"
-                  renderItem={({ item }) => (
-                    <CouncilName name={item.name} position={item.position} />
-                  )}
-                  columnWrapperStyle={{
-                    justifyContent: "flex-start",
-                  }}
-                  contentContainerStyle={{ padding: 8 }}
-                />
+              <View className="flex-1 flex-row flex-wrap justify-between border-[#FAFAFA] border-[2px] rounded-xl p-4">
+                {councilData
+                  .filter((item) => item.position !== "과회장")
+                  .map((item, index) => (
+                    <View
+                      key={index}
+                      style={{
+                        width: "48%",
+                        marginBottom: 8,
+                      }}
+                    >
+                      <CouncilName name={item.name} position={item.position} />
+                    </View>
+                  ))}
               </View>
             </View>
           </ShadowBox>
