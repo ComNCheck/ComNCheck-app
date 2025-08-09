@@ -33,7 +33,7 @@ export default function SettinglView({ children }: Props) {
         />
       </View>
       <ThemedView
-        className="flex-1 p-6 overflow-hidden"
+        className="flex-1 px-6 py-8 overflow-hidden"
         style={{
           paddingTop: HEADER_HEIGHT,
         }}
