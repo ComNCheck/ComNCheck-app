@@ -1,4 +1,4 @@
-import CompleteButton from "@/components/CompleteBtn";
+import CompleteButton from "@/components/button/CompleteBtn";
 import SubTitle from "@/components/title/SubTitle";
 import SettinglView from "@/components/view/SettingView";
 import { Entypo } from "@expo/vector-icons";

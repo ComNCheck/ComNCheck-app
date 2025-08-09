@@ -1,4 +1,4 @@
-import SettinglView from "@/components/SettingView";
+import SettinglView from "@/components/view/SettingView";
 import { Entypo } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { Pressable, Text } from "react-native";

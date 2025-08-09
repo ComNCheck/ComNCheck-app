@@ -5,8 +5,8 @@ import { Collapsible } from "@/components/Collapsible";
 import { ExternalLink } from "@/components/ExternalLink";
 import HeaderBar from "@/components/HeaderBar";
 import { ThemedText } from "@/components/text/ThemedText";
-import { ThemedView } from "@/components/ThemedView";
 import ParallaxScrollView from "@/components/view/ParallaxScrollView";
+import { ThemedView } from "@/components/view/ThemedView";
 
 export default function TabTwoScreen() {
   return (

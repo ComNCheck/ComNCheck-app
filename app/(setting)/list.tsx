@@ -1,4 +1,4 @@
-import SettinglView from "@/components/SettingView";
+import SettinglView from "@/components/view/SettingView";
 import { Text } from "react-native";
 
 export default function ListScreen() {
