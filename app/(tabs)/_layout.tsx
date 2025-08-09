@@ -51,7 +51,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="calendar"
         options={{
-          title: "캘린더",
+          title: "과행사",
           tabBarIcon: ({ color }) => (
             <FontAwesome name="calendar-check-o" size={24} color={color} />
           ),
