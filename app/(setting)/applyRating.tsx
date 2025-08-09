@@ -1,6 +1,6 @@
 import CompleteButton from "@/components/CompleteBtn";
-import SettinglView from "@/components/SettingView";
-import SubTitle from "@/components/SubTitle";
+import SubTitle from "@/components/title/SubTitle";
+import SettinglView from "@/components/view/SettingView";
 import { Entypo } from "@expo/vector-icons";
 import { useState } from "react";
 import { Pressable, Text, TextInput, View } from "react-native";

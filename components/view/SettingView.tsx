@@ -1,10 +1,10 @@
 import type { PropsWithChildren } from "react";
 
-import { ThemedView } from "@/components/ThemedView";
+import { ThemedView } from "@/components/view/ThemedView";
 import { Entypo } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { Pressable, Text, View } from "react-native";
-import HeaderBar from "./HeaderBar";
+import HeaderBar from "../HeaderBar";
 
 const HEADER_HEIGHT = 120;
 type Props = PropsWithChildren<{

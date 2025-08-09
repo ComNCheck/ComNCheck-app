@@ -1,5 +1,5 @@
 import HeaderBar from "@/components/HeaderBar";
-import ParallaxScrollView from "@/components/ParallaxScrollView";
+import ParallaxScrollView from "@/components/view/ParallaxScrollView";
 import { FontAwesome, MaterialIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { Button, Pressable, Text, View } from "react-native";

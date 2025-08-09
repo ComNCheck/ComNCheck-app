@@ -4,9 +4,9 @@ import { Platform, StyleSheet, Text } from "react-native";
 import { Collapsible } from "@/components/Collapsible";
 import { ExternalLink } from "@/components/ExternalLink";
 import HeaderBar from "@/components/HeaderBar";
-import ParallaxScrollView from "@/components/ParallaxScrollView";
-import { ThemedText } from "@/components/ThemedText";
+import { ThemedText } from "@/components/text/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
+import ParallaxScrollView from "@/components/view/ParallaxScrollView";
 
 export default function TabTwoScreen() {
   return (

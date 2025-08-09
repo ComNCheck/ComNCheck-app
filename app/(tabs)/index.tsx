@@ -1,6 +1,6 @@
 import HeaderBar from "@/components/HeaderBar";
-import NoticeTitle from "@/components/NoticeTitle";
-import ParallaxScrollView from "@/components/ParallaxScrollView";
+import NoticeTitle from "@/components/title/NoticeTitle";
+import ParallaxScrollView from "@/components/view/ParallaxScrollView";
 import { useRouter } from "expo-router";
 import React from "react";
 import { Text } from "react-native";
