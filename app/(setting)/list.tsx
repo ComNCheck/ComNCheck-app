@@ -35,7 +35,9 @@ export default function ListScreen() {
               <Text className="font-black text-lg">️🎁 학생회 </Text>
               <View className="flex-1">
                 <FlatList
-                  data={councilData}
+                  data={councilData.filter(
+                    (item) => item.position !== "과회장"
+                  )}
                   keyExtractor={(item, index) => index.toString()}
                   numColumns={2}
                   className="border-[#FAFAFA] border-[2px] rounded-xl p-4"
