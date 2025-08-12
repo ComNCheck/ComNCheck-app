@@ -1,20 +1,23 @@
 import { Image } from "expo-image";
-import { Platform, StyleSheet, Text } from "react-native";
+import { Platform, StyleSheet } from "react-native";
 
 import { Collapsible } from "@/components/Collapsible";
 import { ExternalLink } from "@/components/ExternalLink";
-import HeaderBar from "@/components/HeaderBar";
-import { ThemedText } from "@/components/text/ThemedText";
-import ParallaxScrollView from "@/components/view/ParallaxScrollView";
-import { ThemedView } from "@/components/view/ThemedView";
+import ParallaxScrollView from "@/components/ParallaxScrollView";
+import { ThemedText } from "@/components/ThemedText";
+import { ThemedView } from "@/components/ThemedView";
+import { IconSymbol } from "@/components/ui/IconSymbol";
 
 export default function TabTwoScreen() {
   return (
     <ParallaxScrollView
-      headerBar={
-        <HeaderBar
-          backgroundColor="#fafafa"
-          left={<Text className="text-3xl font-extrabold">과행사</Text>}
+      headerBackgroundColor={{ light: "#D0D0D0", dark: "#353636" }}
+      headerImage={
+        <IconSymbol
+          size={310}
+          color="#808080"
+          name="chevron.left.forwardslash.chevron.right"
+          style={styles.headerImage}
         />
       }
     >
