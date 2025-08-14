@@ -1,6 +1,7 @@
 import HeaderBar from "@/components/HeaderBar";
 import NoticeTitle from "@/components/title/NoticeTitle";
 import EventCard from "@/components/ui/EventCard";
+import NoticeCard from "@/components/ui/NoticeCard";
 import ParallaxScrollView from "@/components/view/ParallaxScrollView";
 import { useRouter } from "expo-router";
 import React from "react";
@@ -42,6 +43,10 @@ const HomeScreen = () => {
         show="전체보기"
         onPress={() => router.push("/(tabs)")} //임시 라우팅
       ></NoticeTitle>
+      <NoticeCard
+        title="2025 여름방학기간 학부사무실 운영시간 및 휴무안내"
+        Date="2025.07.03"
+      />
       <NoticeTitle
         title="취업정보 공지 확인하기"
         show="전체보기"
