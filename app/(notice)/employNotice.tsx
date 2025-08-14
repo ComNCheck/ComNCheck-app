@@ -30,8 +30,7 @@ export default function EmployNoticeScreen() {
       <NoticeCard
         title="1학기 개강총회"
         Date="2025.03.01"
-        place="미쳐버린 파닭"
-        dDay="D-3"
+        onPress={() => router.push("/(notice)/detail")}
       />
     </NormalScrollView>
   );

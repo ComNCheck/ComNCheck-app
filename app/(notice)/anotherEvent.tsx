@@ -31,6 +31,7 @@ export default function AnotherEventScreen() {
         Date="2025.03.01"
         place="미쳐버린 파닭"
         dDay="D-3"
+        onPress={() => router.push("/(notice)/detail")}
       />
     </NormalScrollView>
   );

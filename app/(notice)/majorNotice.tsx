@@ -27,7 +27,11 @@ export default function MajorNoticeScreen() {
       }
     >
       <NoticeTitle title="학부 공지 확인하기"></NoticeTitle>
-      <NoticeCard title="1학기 개강총회" Date="2025.03.01" />
+      <NoticeCard
+        title="1학기 개강총회"
+        Date="2025.03.01"
+        onPress={() => router.push("/(notice)/detail")}
+      />
     </NormalScrollView>
   );
 }
