@@ -1,5 +1,6 @@
 import HeaderBar from "@/components/HeaderBar";
 import NoticeTitle from "@/components/title/NoticeTitle";
+import EventCard from "@/components/ui/EventCard";
 import ParallaxScrollView from "@/components/view/ParallaxScrollView";
 import { useRouter } from "expo-router";
 import React from "react";
@@ -18,6 +19,31 @@ const HomeScreen = () => {
     >
       <NoticeTitle
         title="과행사 공지 확인하기"
+        show="전체보기"
+        onPress={() => router.push("/(tabs)")} //임시 라우팅
+      ></NoticeTitle>
+      <EventCard
+        eventName="개강총회"
+        dDay="D-3"
+        description="개강총회에 참여하세요!"
+      />
+      <NoticeTitle
+        title="타 주최 행사 확인하기"
+        show="전체보기"
+        onPress={() => router.push("/(tabs)")} //임시 라우팅
+      ></NoticeTitle>
+      <EventCard
+        eventName="개강총회"
+        dDay="D-3"
+        description="개강총회에 참여하세요!"
+      />
+      <NoticeTitle
+        title="학부 공지 확인하기"
+        show="전체보기"
+        onPress={() => router.push("/(tabs)")} //임시 라우팅
+      ></NoticeTitle>
+      <NoticeTitle
+        title="취업정보 공지 확인하기"
         show="전체보기"
         onPress={() => router.push("/(tabs)")} //임시 라우팅
       ></NoticeTitle>
