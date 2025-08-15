@@ -1,10 +1,21 @@
 import HeaderBar from "@/components/HeaderBar";
+import ActionButtons from "@/components/my/ActionButtons";
+import UserProfile from "@/components/my/UserProfile";
 import ParallaxScrollView from "@/components/view/ParallaxScrollView";
-import { FontAwesome, MaterialIcons } from "@expo/vector-icons";
+import { useMemberData } from "@/mock/my/useMemberData";
+import { FontAwesome } from "@expo/vector-icons";
 import { router } from "expo-router";
-import { Button, Pressable, Text, View } from "react-native";
+import { Pressable, Text, View } from "react-native";
 
 export default function MyScreen() {
+  const { role, name, studentId } = useMemberData();
+
+  const handleLogout = async () => {
+    // TODO: 실제 로그아웃 API 호출
+    // await postLogout();
+    router.push("/(auth)/login");
+  };
+
   return (
     <ParallaxScrollView
       headerBar={
@@ -19,27 +30,17 @@ export default function MyScreen() {
               color="#B6B6B6"
               onPress={() => router.push("/(setting)")}
             />
-            <MaterialIcons
-              size={28}
-              name="logout"
-              color="#B6B6B6"
-              onPress={() => router.push("/(auth)/login")} //임시 라우팅
-            />
           </Pressable>
         </HeaderBar>
       }
     >
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text style={{ marginBottom: 20 }}>MY Screen</Text>
-        <Button
-          title="로그인 화면으로 이동"
-          onPress={() => router.push("/(auth)/login")}
-        />
-        <View style={{ height: 16 }} />
-        <Button
-          title="회원가입 화면으로 이동"
-          onPress={() => router.push("/(auth)/signup")}
-        />
+      <View className="w-full h-[60vh] justify-center items-center">
+        <UserProfile role={role} name={name} studentId={studentId} />
+
+        {/* ActionButtons와 UserProfile 사이에 간격 추가 */}
+        {/* <View className="h-8" /> */}
+
+        <ActionButtons role={role} />
       </View>
     </ParallaxScrollView>
   );
