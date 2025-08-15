@@ -5,6 +5,7 @@ import * as ImagePicker from "expo-image-picker";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import {
+  Alert,
   Button,
   Modal,
   Pressable,
@@ -24,7 +25,7 @@ export default function Signup() {
     const permissionResult =
       await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (permissionResult.granted === false) {
-      alert("사진 접근 권한이 필요합니다.");
+      Alert.alert("권한 필요", "사진 접근 권한이 필요합니다.");
       return;
     }
 

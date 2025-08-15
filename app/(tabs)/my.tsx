@@ -7,14 +7,15 @@ import { FontAwesome } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { Pressable, Text, View } from "react-native";
 
-export default function MyScreen() {
+export default function MyTab() {
   const { role, name, studentId } = useMemberData();
 
-  const handleLogout = async () => {
-    // TODO: 실제 로그아웃 API 호출
-    // await postLogout();
-    router.push("/(auth)/login");
-  };
+  // TODO: 로그아웃 기능은 설정 화면에서 구현 예정
+  // const handleLogout = async () => {
+  //   // TODO: 실제 로그아웃 API 호출
+  //   // await postLogout();
+  //   router.push("/(auth)/login");
+  // };
 
   return (
     <ParallaxScrollView
