@@ -3,7 +3,7 @@ import SubTitle from "@/components/title/SubTitle";
 import SettinglView from "@/components/view/SettingView";
 import { Entypo } from "@expo/vector-icons";
 import { useState } from "react";
-import { Pressable, Text, TextInput, View } from "react-native";
+import { Alert, Pressable, Text, TextInput, View } from "react-native";
 
 export default function ApplyRatingScreen() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -12,7 +12,7 @@ export default function ApplyRatingScreen() {
   const positions = ["학생", "학생회", "과회장"];
 
   const handleSubmit = () => {
-    alert("신청이 완료되었습니다!");
+    Alert.alert("신청 완료", "신청이 완료되었습니다!");
   };
   return (
     <SettinglView>

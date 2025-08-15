@@ -44,7 +44,7 @@ export default function RootLayout() {
       ];
       //SplashScreen.hideAsync();
     }
-  }, [loaded]);
+  }, [loaded, Text, TextInput]);
 
   useEffect(() => {
     if (loaded) {
