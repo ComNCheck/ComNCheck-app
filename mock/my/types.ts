@@ -21,3 +21,12 @@ export interface ButtonConfig {
   route?: string;
   action?: "openModal";
 }
+
+export type QuestionStatus = "answered" | "pending";
+
+export interface MyQuestionItem {
+  id: number;
+  title: string;
+  createdAt: string; // YYYY.MM.DD
+  status: QuestionStatus;
+}

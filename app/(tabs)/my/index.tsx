@@ -10,13 +10,6 @@ import { Pressable, Text, View } from "react-native";
 export default function MyTab() {
   const { role, name, studentId } = useMemberData();
 
-  // TODO: 로그아웃 기능은 설정 화면에서 구현 예정
-  // const handleLogout = async () => {
-  //   // TODO: 실제 로그아웃 API 호출
-  //   // await postLogout();
-  //   router.push("/(auth)/login");
-  // };
-
   return (
     <ParallaxScrollView
       headerBar={
@@ -37,10 +30,6 @@ export default function MyTab() {
     >
       <View className="w-full h-[60vh] justify-center items-center">
         <UserProfile role={role} name={name} studentId={studentId} />
-
-        {/* ActionButtons와 UserProfile 사이에 간격 추가 */}
-        {/* <View className="h-8" /> */}
-
         <ActionButtons role={role} />
       </View>
     </ParallaxScrollView>

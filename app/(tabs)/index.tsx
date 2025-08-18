@@ -4,7 +4,6 @@ import EventCard from "@/components/ui/EventCard";
 import NoticeCard from "@/components/ui/NoticeCard";
 import ParallaxScrollView from "@/components/view/ParallaxScrollView";
 import { useRouter } from "expo-router";
-import React from "react";
 import { Text } from "react-native";
 
 const HomeScreen = () => {
