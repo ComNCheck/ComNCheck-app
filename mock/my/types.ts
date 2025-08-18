@@ -29,4 +29,9 @@ export interface MyQuestionItem {
   title: string;
   createdAt: string; // YYYY.MM.DD
   status: QuestionStatus;
+  isPublic: boolean;
+  answer?: {
+    content: string;
+    answeredAt: string; // YYYY.MM.DD
+  };
 }

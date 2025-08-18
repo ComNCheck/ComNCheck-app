@@ -4,8 +4,9 @@ import SubTitle from "@/components/title/SubTitle";
 import ShadowBox from "@/components/ui/ShadowBox";
 import { useBottomTabOverflow } from "@/components/ui/TabBarBackground";
 import ParallaxScrollView from "@/components/view/ParallaxScrollView";
+import { useMyQuestions } from "@/mock/my/useMyQuestions";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Alert, Switch, Text, TextInput, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -14,6 +15,15 @@ export default function MyWritingEdit() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const [content, setContent] = useState("");
   const [isPublic, setIsPublic] = useState(true);
+  const { questions } = useMyQuestions();
+  const item = questions.find((q) => String(q.id) === String(id));
+
+  useEffect(() => {
+    if (item) {
+      setContent(item.title);
+      setIsPublic(item.isPublic);
+    }
+  }, [item]);
   const insets = useSafeAreaInsets();
   let bottom = 0;
   try {
