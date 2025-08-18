@@ -31,7 +31,7 @@ export default function ActionButtons({ role }: ActionButtonsProps) {
       role: ["ROLE_ADMIN", "ROLE_MAJOR_PRESIDENT", "ROLE_STUDENT_COUNCIL"],
       icon: "answer",
       text: "답변하기",
-      route: "/my/answer",
+      route: "/(tabs)/my/answer",
     },
     {
       role: ["ROLE_ADMIN", "ROLE_MAJOR_PRESIDENT"],
