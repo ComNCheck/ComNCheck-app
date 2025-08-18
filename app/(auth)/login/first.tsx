@@ -1,6 +1,6 @@
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
-import React, { useState } from "react";
+import { useState } from "react";
 import { Text, View } from "react-native";
 import RadioGroup, { RadioButtonProps } from "react-native-radio-buttons-group";
 
@@ -35,7 +35,7 @@ export default function LoginFirst() {
     if (id === "1") {
       router.push("/(auth)/signup");
     } else {
-      router.push("/(tabs)/my");
+      router.push("/(tabs)");
     }
   };
 
