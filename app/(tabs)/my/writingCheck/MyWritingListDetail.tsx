@@ -4,13 +4,19 @@ import NormalScrollView from "@/components/view/NormalScrollView";
 import { useMyQuestions } from "@/mock/my/useMyQuestions";
 import { Feather } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
+import { useEffect, useState } from "react";
 import { Pressable, Switch, Text, View } from "react-native";
 
 export default function MyWritingListDetail() {
   const router = useRouter();
   const { id } = useLocalSearchParams<{ id: string }>();
   const { questions } = useMyQuestions();
+  const [isPublic, setIsPublic] = useState<boolean>(true);
   const item = questions.find((q) => String(q.id) === String(id));
+
+  useEffect(() => {
+    if (item) setIsPublic(item.isPublic);
+  }, [item]);
 
   return (
     <NormalScrollView
@@ -40,8 +46,8 @@ export default function MyWritingListDetail() {
                 질문
               </Text>
               <Switch
-                value={true}
-                disabled
+                value={isPublic}
+                onValueChange={setIsPublic}
                 trackColor={{ false: "#d1d5db", true: "#3b82f6" }}
                 thumbColor={"#ffffff"}
               />
@@ -62,12 +68,11 @@ export default function MyWritingListDetail() {
                 답변내용
               </Text>
               <Text className="text-xs" style={{ color: "#9ca3af" }}>
-                답변 날짜 : {item.createdAt}
+                답변 날짜 : {item.answer?.answeredAt ?? item.createdAt}
               </Text>
             </View>
             <Text className="text-base" style={{ color: "#3a3a3a" }}>
-              저번 구글폼 을 통해 참여자를 받았었는데, 예산문제로 더이상 추가
-              모집은 없습니다. 감사합니다.
+              {item.answer?.content ?? "아직 답변이 등록되지 않았습니다."}
             </Text>
           </ShadowBox>
         </>
