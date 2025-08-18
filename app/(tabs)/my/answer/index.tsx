@@ -78,6 +78,19 @@ export default function AnswerScreen() {
             title={q.title}
             status={q.status}
             createdAt={q.createdAt}
+            onPress={() => {
+              if (q.status === "pending") {
+                router.push({
+                  pathname: "/(tabs)/my/answer/AnswerWrite" as any,
+                  params: { id: String(q.id) },
+                });
+              } else {
+                router.push({
+                  pathname: "/(tabs)/my/answer/AnswerEdit" as any,
+                  params: { id: String(q.id) },
+                });
+              }
+            }}
           />
         ))}
       </View>
