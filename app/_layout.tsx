@@ -6,12 +6,14 @@ import {
 import { useFonts } from "expo-font";
 import { SplashScreen, Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
+import "react-native-gesture-handler";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import "react-native-reanimated";
 
 import "@/global.css";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { useEffect, useState } from "react";
-import { Text as RNText, TextInput as RNTextInput, View } from "react-native";
+import { Text as RNText, TextInput as RNTextInput } from "react-native";
 interface DefaultPropsCompat {
   defaultProps?: any;
 }
@@ -67,7 +69,7 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <View style={{ flex: 1 }}>
+      <GestureHandlerRootView style={{ flex: 1 }}>
         <Stack
           screenOptions={{
             headerTitleStyle: { fontFamily: "Pretendard-Bold" },
@@ -79,10 +81,11 @@ export default function RootLayout() {
           <Stack.Screen name="(auth)" options={{ headerShown: false }} />
           <Stack.Screen name="(setting)" options={{ headerShown: false }} />
           <Stack.Screen name="(notice)" options={{ headerShown: false }} />
+          <Stack.Screen name="(my)" options={{ headerShown: false }} />
           <Stack.Screen name="+not-found" />
         </Stack>
         <StatusBar style="auto" />
-      </View>
+      </GestureHandlerRootView>
     </ThemeProvider>
   );
 }

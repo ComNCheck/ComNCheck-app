@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import { View } from "react-native";
 import ActionButton from "./ActionButton";
 
@@ -24,7 +25,7 @@ export default function ActionButtons({ role }: ActionButtonsProps) {
       ],
       icon: "question",
       text: "질문하기",
-      route: "/my/question",
+      route: "/(tabs)/my/question",
     },
     {
       role: ["ROLE_ADMIN", "ROLE_MAJOR_PRESIDENT", "ROLE_STUDENT_COUNCIL"],
@@ -69,8 +70,8 @@ export default function ActionButtons({ role }: ActionButtonsProps) {
     <View className="items-center px-4 w-full h-20">
       <View className="flex-row rounded-3xl bg-blue-500 p-4 max-w-sm w-full h-full">
         {filteredButtons.map(({ icon, text }, index) => (
-          <>
-            <View key={index} className="flex-1">
+          <Fragment key={`${icon}-${text}`}>
+            <View className="flex-1">
               <ActionButton
                 icon={icon}
                 text={text}
@@ -80,7 +81,7 @@ export default function ActionButtons({ role }: ActionButtonsProps) {
             {index < filteredButtons.length - 1 && (
               <View className="w-px h-12 bg-white self-center" />
             )}
-          </>
+          </Fragment>
         ))}
       </View>
     </View>

@@ -3,6 +3,7 @@ import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import Fontisto from "@expo/vector-icons/Fontisto";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import { useRouter } from "expo-router";
 import { Pressable, Text, View } from "react-native";
 
 interface ActionButtonProps {
@@ -35,8 +36,21 @@ const getIconComponent = (iconName: string) => {
 };
 
 export default function ActionButton({ icon, text, total }: ActionButtonProps) {
+  const router = useRouter();
+
+  const handlePress = () => {
+    // console.log("버튼 클릭됨:", icon, text);
+    if (icon === "question") {
+      // console.log("질문하기 버튼 클릭 - 라우팅 시도");
+      router.push("/(tabs)/my/question");
+    }
+  };
+
   return (
-    <Pressable className="flex-1 flex-col items-center justify-center h-20 bg-transparent">
+    <Pressable
+      className="flex-1 flex-col items-center justify-center h-20 bg-transparent"
+      onPress={handlePress}
+    >
       <View className="h-8 w-8 mb-1 items-center justify-center">
         {getIconComponent(icon)}
       </View>
