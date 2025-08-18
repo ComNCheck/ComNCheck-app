@@ -1,4 +1,3 @@
-import ShadowBox from "@/components/ui/ShadowBox";
 import { QuestionStatus } from "@/mock/my/types";
 import { Pressable, Text, View } from "react-native";
 
@@ -9,20 +8,15 @@ interface MyWritingListBoxProps {
   onPress?: () => void;
 }
 
-const StatusBadge = ({ status }: { status: QuestionStatus }) => {
+const StatusText = ({ status }: { status: QuestionStatus }) => {
   const isAnswered = status === "answered";
   return (
-    <View
-      className="px-3 py-2 rounded-lg"
-      style={{ backgroundColor: isAnswered ? "#FFFFFF" : "#FFFFFF" }}
+    <Text
+      className="text-lg font-bold"
+      style={{ color: isAnswered ? "#3A3A3A" : "#B6B6B6" }}
     >
-      <Text
-        className="font-semibold"
-        style={{ color: isAnswered ? "#3A3A3A" : "#B6B6B6" }}
-      >
-        {isAnswered ? "답변완료" : "답변예정"}
-      </Text>
-    </View>
+      {isAnswered ? "답변완료" : "답변예정"}
+    </Text>
   );
 };
 
@@ -33,20 +27,19 @@ export default function MyWritingListBOX({
   onPress,
 }: MyWritingListBoxProps) {
   return (
-    <Pressable onPress={onPress} className="active:opacity-80">
-      <ShadowBox>
-        <View className="flex-row items-center justify-between mb-2">
-          <Text
-            className="font-semibold"
-            style={{ color: "#111827" }}
-            numberOfLines={1}
-          >
+    <Pressable
+      onPress={onPress}
+      className="w-full items-start justify-between p-4 bg-white rounded-lg border-[#E5E7EB] border-[0.5px] active:opacity-80"
+    >
+      <View className="flex-row items-center justify-between w-full">
+        <View className="flex-col">
+          <Text className="text-sm font-bold text-text" numberOfLines={1}>
             {title}
           </Text>
-          <StatusBadge status={status} />
+          <Text className="text-sm font-medium text-[#666]">{createdAt}</Text>
         </View>
-        <Text className="text-[#9ca3af]">{createdAt}</Text>
-      </ShadowBox>
+        <StatusText status={status} />
+      </View>
     </Pressable>
   );
 }
