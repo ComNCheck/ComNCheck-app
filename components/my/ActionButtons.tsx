@@ -60,7 +60,7 @@ export default function ActionButtons({ role }: ActionButtonsProps) {
       ],
       icon: "my-text",
       text: "내가 쓴 글",
-      route: "/my/writingCheck",
+      route: "/(tabs)/my/writingCheck",
     },
   ];
 
@@ -69,13 +69,15 @@ export default function ActionButtons({ role }: ActionButtonsProps) {
   return (
     <View className="items-center px-4 w-full h-20">
       <View className="flex-row rounded-3xl bg-blue-500 p-4 max-w-sm w-full h-full">
-        {filteredButtons.map(({ icon, text }, index) => (
+        {filteredButtons.map(({ icon, text, route, action }, index) => (
           <Fragment key={`${icon}-${text}`}>
             <View className="flex-1">
               <ActionButton
                 icon={icon}
                 text={text}
                 total={filteredButtons.length}
+                route={route}
+                action={action}
               />
             </View>
             {index < filteredButtons.length - 1 && (
