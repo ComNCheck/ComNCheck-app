@@ -10,6 +10,8 @@ interface ActionButtonProps {
   icon: string;
   text: string;
   total: number;
+  route?: string;
+  action?: "openModal";
 }
 
 const getIconComponent = (iconName: string) => {
@@ -35,14 +37,27 @@ const getIconComponent = (iconName: string) => {
   }
 };
 
-export default function ActionButton({ icon, text, total }: ActionButtonProps) {
+export default function ActionButton({
+  icon,
+  text,
+  total,
+  route,
+  action,
+}: ActionButtonProps) {
   const router = useRouter();
 
   const handlePress = () => {
-    // console.log("버튼 클릭됨:", icon, text);
+    if (route) {
+      router.push(route as any);
+      return;
+    }
     if (icon === "question") {
-      // console.log("질문하기 버튼 클릭 - 라우팅 시도");
       router.push("/(tabs)/my/question");
+      return;
+    }
+    if (action === "openModal") {
+      // TODO: 필요한 경우 모달 오픈 로직 추가
+      return;
     }
   };
 

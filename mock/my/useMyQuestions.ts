@@ -18,13 +18,13 @@ export const useMyQuestions = () => {
           },
           {
             id: 2,
-            title: "기간 내에 아직 행사 신청을 못했는데...",
+            title: "기간 내에 아직 행사 신청을 못했는데 가능한가요?",
             createdAt: "2025.07.03",
             status: "answered",
           },
           {
             id: 3,
-            title: "기간 내에 아직 행사 신청을 못했는데...",
+            title: "기간 내에 아직 행사 신청을 못했는데 가능한가요?",
             createdAt: "2025.07.03",
             status: "pending",
           },

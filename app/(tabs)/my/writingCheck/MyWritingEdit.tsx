@@ -4,10 +4,9 @@ import SubTitle from "@/components/title/SubTitle";
 import ShadowBox from "@/components/ui/ShadowBox";
 import { useBottomTabOverflow } from "@/components/ui/TabBarBackground";
 import ParallaxScrollView from "@/components/view/ParallaxScrollView";
-import { Feather } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
-import { Pressable, Switch, Text, TextInput, View } from "react-native";
+import { Alert, Switch, Text, TextInput, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function MyWritingEdit() {
@@ -26,7 +25,9 @@ export default function MyWritingEdit() {
 
   const handleSubmit = () => {
     // TODO: 실제 수정 API 연결
-    router.back();
+    Alert.alert("알림", "질문이 수정되었습니다.", [
+      { text: "확인", onPress: () => router.push("/(tabs)/my/writingCheck") },
+    ]);
   };
 
   return (
@@ -35,25 +36,8 @@ export default function MyWritingEdit() {
         headerBar={
           <HeaderBar
             backgroundColor="#fafafa"
-            left={
-              <Pressable
-                onPress={() => router.back()}
-                className="flex-row gap-2 items-center"
-              >
-                <Feather name="arrow-left" size={20} color="#3a3a3a" />
-                <Text className="font-extrabold text-xl">돌아가기</Text>
-              </Pressable>
-            }
-          >
-            {/* <Pressable className="flex-row">
-              <FontAwesome
-                size={28}
-                name="gear"
-                color="#B6B6B6"
-                onPress={() => router.push("/(setting)")}
-              />
-            </Pressable> */}
-          </HeaderBar>
+            left={<Text className="text-3xl font-extrabold">MY</Text>}
+          ></HeaderBar>
         }
       >
         <View>
