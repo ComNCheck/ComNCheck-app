@@ -8,6 +8,9 @@ module.exports = {
   presets: [require("nativewind/preset")],
   theme: {
     extend: {
+      fontFamily: {
+        pretendard: ["Pretendard-Regular"],
+      },
       colors: {
         text: "#3a3a3a",
         background: "#FAFAFA",

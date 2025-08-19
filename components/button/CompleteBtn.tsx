@@ -20,11 +20,7 @@ export default function CompleteButton({
     <Pressable
       onPress={onPress}
       className="w-full h-[60px] rounded-xl items-center justify-center"
-      style={{
-        backgroundColor: backgroundColor,
-        borderColor: borderColor,
-        borderWidth: borderWidth,
-      }}
+      style={{ backgroundColor, borderColor, borderWidth }}
     >
       <Text className="font-bold text-[22px]" style={{ color: textColor }}>
         {content}
