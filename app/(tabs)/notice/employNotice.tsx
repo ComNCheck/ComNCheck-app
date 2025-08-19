@@ -16,7 +16,7 @@ export default function EmployNoticeScreen() {
           left={
             <Pressable
               //onPress={() => router.back()}
-              onPress={() => router.push("/(tabs)")}
+              onPress={() => router.push("/(tabs)/notice")}
               className="flex-row items-center"
             >
               <Entypo name="chevron-left" size={30} color="#3a3a3a" />
@@ -30,7 +30,7 @@ export default function EmployNoticeScreen() {
       <NoticeCard
         title="1학기 개강총회"
         Date="2025.03.01"
-        onPress={() => router.push("/(notice)/detail")}
+        onPress={() => router.push("/(tabs)/notice/detail")}
       />
     </NormalScrollView>
   );
