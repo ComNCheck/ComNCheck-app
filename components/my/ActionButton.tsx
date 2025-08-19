@@ -3,12 +3,15 @@ import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import Fontisto from "@expo/vector-icons/Fontisto";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import { useRouter } from "expo-router";
 import { Pressable, Text, View } from "react-native";
 
 interface ActionButtonProps {
   icon: string;
   text: string;
   total: number;
+  route?: string;
+  action?: "openModal";
 }
 
 const getIconComponent = (iconName: string) => {
@@ -34,9 +37,35 @@ const getIconComponent = (iconName: string) => {
   }
 };
 
-export default function ActionButton({ icon, text, total }: ActionButtonProps) {
+export default function ActionButton({
+  icon,
+  text,
+  total,
+  route,
+  action,
+}: ActionButtonProps) {
+  const router = useRouter();
+
+  const handlePress = () => {
+    if (route) {
+      router.push(route as any);
+      return;
+    }
+    if (icon === "question") {
+      router.push("/(tabs)/my/question");
+      return;
+    }
+    if (action === "openModal") {
+      // TODO: 필요한 경우 모달 오픈 로직 추가
+      return;
+    }
+  };
+
   return (
-    <Pressable className="flex-1 flex-col items-center justify-center h-20 bg-transparent">
+    <Pressable
+      className="flex-1 flex-col items-center justify-center h-20 bg-transparent"
+      onPress={handlePress}
+    >
       <View className="h-8 w-8 mb-1 items-center justify-center">
         {getIconComponent(icon)}
       </View>
