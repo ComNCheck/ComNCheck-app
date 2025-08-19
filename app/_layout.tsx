@@ -82,6 +82,7 @@ export default function RootLayout() {
           <Stack.Screen name="(setting)" options={{ headerShown: false }} />
           <Stack.Screen name="(notice)" options={{ headerShown: false }} />
           <Stack.Screen name="(my)" options={{ headerShown: false }} />
+          <Stack.Screen name="(qna)" options={{ headerShown: false }} />
           <Stack.Screen name="+not-found" />
         </Stack>
         <StatusBar style="auto" />
