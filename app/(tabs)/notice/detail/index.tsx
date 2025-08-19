@@ -9,7 +9,7 @@ import { Pressable, Text, View } from "react-native";
 export default function DetailEventScreen() {
   const router = useRouter();
   const handleNext = () => {
-    router.push("/(setting)"); //임시 라우팅
+    router.push("/(tabs)/notice"); //임시 라우팅
   };
   return (
     <NormalScrollView
