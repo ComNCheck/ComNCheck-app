@@ -1,7 +1,7 @@
 import HeaderBar from "@/components/HeaderBar";
 import NoticeTitle from "@/components/title/NoticeTitle";
 import NoticeCard from "@/components/ui/NoticeCard";
-import NormalScrollView from "@/components/view/NormalScrollView";
+import ParallaxScrollView from "@/components/view/ParallaxScrollView";
 import { Entypo } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { Pressable, Text } from "react-native";
@@ -9,7 +9,7 @@ import { Pressable, Text } from "react-native";
 export default function MajorEventScreen() {
   const router = useRouter();
   return (
-    <NormalScrollView
+    <ParallaxScrollView
       headerBar={
         <HeaderBar
           backgroundColor="#fafafa"
@@ -34,6 +34,6 @@ export default function MajorEventScreen() {
         dDay="D-2"
         onPress={() => router.push("/(tabs)/notice/detail")}
       />
-    </NormalScrollView>
+    </ParallaxScrollView>
   );
 }
