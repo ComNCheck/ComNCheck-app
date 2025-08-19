@@ -1,5 +1,7 @@
 import HeaderBar from "@/components/HeaderBar";
 import CompleteButton from "@/components/button/CompleteBtn";
+import AppSwitch from "@/components/ui/AppSwitch";
+import BottomAbsolute from "@/components/ui/BottomAbsolute";
 import ShadowBox from "@/components/ui/ShadowBox";
 import { useBottomTabOverflow } from "@/components/ui/TabBarBackground";
 import ParallaxScrollView from "@/components/view/ParallaxScrollView";
@@ -7,7 +9,7 @@ import { useMyQuestions } from "@/mock/my/useMyQuestions";
 import { Feather } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import { Alert, Pressable, Switch, Text, TextInput, View } from "react-native";
+import { Alert, Pressable, Text, TextInput, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function AnswerWrite() {
@@ -60,32 +62,24 @@ export default function AnswerWrite() {
           <View>
             <ShadowBox>
               <View className="flex-row items-center justify-between mb-3">
-                <Text
-                  className="text-lg font-semibold"
-                  style={{ color: "#1b1b1b" }}
-                >
+                <Text className="text-lg font-semibold text-[#1b1b1b]">
                   질문
                 </Text>
-                <Switch
+                <AppSwitch
                   value={isPublic}
                   onValueChange={setIsPublic}
                   trackColor={{ false: "#d1d5db", true: "#3b82f6" }}
                   thumbColor={"#ffffff"}
                 />
               </View>
-              <Text className="text-base" style={{ color: "#3a3a3a" }}>
-                {item.title}
-              </Text>
+              <Text className="text-base text-text">{item.title}</Text>
             </ShadowBox>
 
             <View className="h-4" />
 
             <ShadowBox>
               <View className="flex-row items-center justify-between mb-3">
-                <Text
-                  className="text-lg font-semibold"
-                  style={{ color: "#1b1b1b" }}
-                >
+                <Text className="text-lg font-semibold text-[#1b1b1b]">
                   답변내용
                 </Text>
               </View>
@@ -95,38 +89,29 @@ export default function AnswerWrite() {
                 placeholder="답변을 작성해주세요"
                 multiline
                 textAlignVertical="top"
-                className="text-base"
-                style={{ fontFamily: "Pretendard-Regular", minHeight: 300 }}
+                className="text-base min-h-[300px] font-pretendard"
               />
             </ShadowBox>
 
-            <View style={{ height: 140 }} />
+            <View className="h-[140px]" />
           </View>
         ) : (
           <ShadowBox>
-            <Text className="text-base" style={{ color: "#3a3a3a" }}>
+            <Text className="text-base text-text">
               선택한 질문을 찾을 수 없어요.
             </Text>
           </ShadowBox>
         )}
       </ParallaxScrollView>
 
-      <View
-        className="px-4"
-        style={{
-          position: "absolute",
-          left: 0,
-          right: 0,
-          bottom: floatingBottomOffset,
-        }}
-      >
+      <BottomAbsolute bottom={floatingBottomOffset} className="px-4">
         <CompleteButton
           content="답변완료"
           onPress={handleSubmit}
           backgroundColor="#0077ff"
           textColor="#ffffff"
         />
-      </View>
+      </BottomAbsolute>
     </View>
   );
 }

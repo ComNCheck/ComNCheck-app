@@ -12,8 +12,9 @@ const StatusText = ({ status }: { status: QuestionStatus }) => {
   const isAnswered = status === "answered";
   return (
     <Text
-      className="text-lg font-bold"
-      style={{ color: isAnswered ? "#3A3A3A" : "#B6B6B6" }}
+      className={`text-lg font-bold ${
+        isAnswered ? "text-[#3A3A3A]" : "text-[#B6B6B6]"
+      }`}
     >
       {isAnswered ? "답변완료" : "답변예정"}
     </Text>

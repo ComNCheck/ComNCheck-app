@@ -1,13 +1,15 @@
 import HeaderBar from "@/components/HeaderBar";
 import CompleteButton from "@/components/button/CompleteBtn";
 import SubTitle from "@/components/title/SubTitle";
+import AppSwitch from "@/components/ui/AppSwitch";
+import BottomAbsolute from "@/components/ui/BottomAbsolute";
 import ShadowBox from "@/components/ui/ShadowBox";
 import { useBottomTabOverflow } from "@/components/ui/TabBarBackground";
 import ParallaxScrollView from "@/components/view/ParallaxScrollView";
 import { useMyQuestions } from "@/mock/my/useMyQuestions";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import { Alert, Switch, Text, TextInput, View } from "react-native";
+import { Alert, Text, TextInput, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function MyWritingEdit() {
@@ -57,13 +59,8 @@ export default function MyWritingEdit() {
           />
           <ShadowBox>
             <View className="flex-row items-center justify-between mb-3">
-              <Text
-                className="text-lg font-semibold"
-                style={{ color: "#1b1b1b" }}
-              >
-                질문
-              </Text>
-              <Switch
+              <Text className="text-lg font-semibold text-[#1b1b1b]">질문</Text>
+              <AppSwitch
                 value={isPublic}
                 onValueChange={setIsPublic}
                 trackColor={{ false: "#d1d5db", true: "#3b82f6" }}
@@ -76,34 +73,22 @@ export default function MyWritingEdit() {
               placeholder="기간 내에 아직 행사 신청을 못했는데 지금도 신청 가능한가요?"
               multiline
               textAlignVertical="top"
-              className="text-base"
-              style={{
-                fontFamily: "Pretendard-Regular",
-                minHeight: 300,
-              }}
+              className="text-base min-h-[300px] font-pretendard"
             />
           </ShadowBox>
 
-          <View style={{ height: 140 }} />
+          <View className="h-[140px]" />
         </View>
       </ParallaxScrollView>
 
-      <View
-        className="px-4"
-        style={{
-          position: "absolute",
-          left: 0,
-          right: 0,
-          bottom: floatingBottomOffset,
-        }}
-      >
+      <BottomAbsolute bottom={floatingBottomOffset} className="px-4">
         <CompleteButton
           content="수정완료"
           onPress={handleSubmit}
           backgroundColor="#0077ff"
           textColor="#ffffff"
         />
-      </View>
+      </BottomAbsolute>
     </View>
   );
 }

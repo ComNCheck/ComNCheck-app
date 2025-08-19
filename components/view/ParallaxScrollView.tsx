@@ -5,7 +5,7 @@ import { ThemedView } from "@/components/view/ThemedView";
 import { View } from "react-native";
 import { useBottomTabOverflow } from "../ui/TabBarBackground";
 
-const HEADER_HEIGHT = 100;
+const HEADER_HEIGHT = 120;
 type Props = PropsWithChildren<{
   headerBar: ReactElement;
   headerBackgroundColor?: { dark: string; light: string };
@@ -27,21 +27,17 @@ export default function ParallaxScrollView({ children, headerBar }: Props) {
 
   return (
     <ThemedView className="flex-1">
-      <View
-        className="absolute top-0 left-0 right-0 z-50"
-        style={{ height: HEADER_HEIGHT }}
-      >
+      <View className="absolute top-0 left-0 right-0 z-50 h-[120px]">
         {headerBar}
       </View>
       <Animated.ScrollView
         scrollEventThrottle={16}
-        contentContainerStyle={{
-          paddingTop: HEADER_HEIGHT,
-          paddingBottom: bottom,
-        }}
+        contentContainerStyle={{ paddingBottom: bottom }}
         scrollIndicatorInsets={{ bottom }}
       >
-        <ThemedView className="flex-1 p-6 gap-4">{children}</ThemedView>
+        <ThemedView className="flex-1 p-6 pt-[120px] gap-4">
+          {children}
+        </ThemedView>
       </Animated.ScrollView>
     </ThemedView>
   );
