@@ -49,7 +49,7 @@ export default function ActionButtons({ role }: ActionButtonsProps) {
       ],
       icon: "applied-event",
       text: "신청한 행사",
-      action: "openModal",
+      route: "/(tabs)/my/appliedEvent",
     },
     {
       role: [

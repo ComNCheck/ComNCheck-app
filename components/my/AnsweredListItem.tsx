@@ -18,29 +18,15 @@ export default function AnsweredListItem({
       onPress={onPress}
       className="w-full flex-row items-center gap-4 p-4 bg-white rounded-lg border-[#E5E7EB] border-[0.5px] active:opacity-80"
     >
-      <View
-        className="items-center justify-center"
-        style={{
-          width: 36,
-          height: 36,
-          borderRadius: 18,
-          borderWidth: 0.5,
-          borderColor: "#E5E7EB",
-          backgroundColor: "#ffffff",
-        }}
-      >
-        <Text className="font-extrabold" style={{ color: "#3b82f6" }}>
-          {index}
-        </Text>
+      <View className="items-center justify-center w-9 h-9 rounded-full border-[0.5px] border-[#E5E7EB] bg-white">
+        <Text className="font-extrabold text-blue-500">{index}</Text>
       </View>
 
       <View className="flex-1">
         <Text className="text-base font-bold text-text" numberOfLines={1}>
           {title}
         </Text>
-        <Text className="text-sm font-medium" style={{ color: "#6b7280" }}>
-          {createdAt}
-        </Text>
+        <Text className="text-sm font-medium text-gray-500">{createdAt}</Text>
       </View>
     </Pressable>
   );

@@ -36,7 +36,11 @@ export default function AnswerScreen() {
         className={`flex-row items-center gap-2 px-6 py-3 rounded-2xl ${bgClass}`}
       >
         <Ionicons name={iconName} size={18} color={textColor} />
-        <Text className="text-base font-extrabold" style={{ color: textColor }}>
+        <Text
+          className={`text-base font-extrabold ${
+            isActive ? "text-[#0077FF]" : "text-gray-500"
+          }`}
+        >
           {label}
         </Text>
       </Pressable>

@@ -63,8 +63,7 @@ export default function MyWritingListScreen() {
             renderRightActions={() => (
               <Pressable
                 onPress={() => handleDelete(q.id)}
-                className="bg-red-500 h-full rounded-r-xl items-center justify-center"
-                style={{ width: 40 }}
+                className="bg-red-500 h-full rounded-r-xl items-center justify-center w-10"
               >
                 <FontAwesome name="trash" size={22} color="#ffffff" />
               </Pressable>
