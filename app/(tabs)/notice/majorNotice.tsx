@@ -1,7 +1,7 @@
 import HeaderBar from "@/components/HeaderBar";
 import NoticeTitle from "@/components/title/NoticeTitle";
 import NoticeCard from "@/components/ui/NoticeCard";
-import NormalScrollView from "@/components/view/NormalScrollView";
+import ParallaxScrollView from "@/components/view/ParallaxScrollView";
 import { Entypo } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { Pressable, Text } from "react-native";
@@ -9,14 +9,14 @@ import { Pressable, Text } from "react-native";
 export default function MajorNoticeScreen() {
   const router = useRouter();
   return (
-    <NormalScrollView
+    <ParallaxScrollView
       headerBar={
         <HeaderBar
           backgroundColor="#fafafa"
           left={
             <Pressable
               //onPress={() => router.back()}
-              onPress={() => router.push("/(tabs)")}
+              onPress={() => router.push("/(tabs)/notice")}
               className="flex-row gap-2 items-center"
             >
               <Entypo name="chevron-left" size={30} color="#3a3a3a" />
@@ -30,8 +30,8 @@ export default function MajorNoticeScreen() {
       <NoticeCard
         title="1학기 개강총회"
         Date="2025.03.01"
-        onPress={() => router.push("/(notice)/detail")}
+        onPress={() => router.push("/(tabs)/notice/detail")}
       />
-    </NormalScrollView>
+    </ParallaxScrollView>
   );
 }

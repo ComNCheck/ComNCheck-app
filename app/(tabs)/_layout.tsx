@@ -6,7 +6,7 @@ import { IconSymbol } from "@/components/ui/IconSymbol";
 import TabBarBackground from "@/components/ui/TabBarBackground";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
-import { FontAwesome, MaterialIcons } from "@expo/vector-icons";
+import { FontAwesome, MaterialCommunityIcons } from "@expo/vector-icons";
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -34,12 +34,16 @@ export default function TabLayout() {
         options={{
           title: "QnA",
           tabBarIcon: ({ color }) => (
-            <MaterialIcons size={24} name="question-answer" color={color} />
+            <MaterialCommunityIcons
+              name="comment-quote"
+              size={24}
+              color={color}
+            />
           ),
         }}
       />
       <Tabs.Screen
-        name="index"
+        name="notice"
         options={{
           title: "공지",
           tabBarIcon: ({ color }) => (
@@ -48,7 +52,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="calendar"
+        name="index"
         options={{
           title: "과행사",
           tabBarIcon: ({ color }) => (
