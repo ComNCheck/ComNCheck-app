@@ -1,6 +1,6 @@
 import CompleteButton from "@/components/button/CompleteBtn";
 import HeaderBar from "@/components/HeaderBar";
-import NormalScrollView from "@/components/view/NormalScrollView";
+import ParallaxScrollView from "@/components/view/ParallaxScrollView";
 import { Feather } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
@@ -9,10 +9,10 @@ import { Pressable, Text, View } from "react-native";
 export default function DetailEventScreen() {
   const router = useRouter();
   const handleNext = () => {
-    router.push("/(setting)"); //임시 라우팅
+    router.push("/(tabs)/notice"); //임시 라우팅
   };
   return (
-    <NormalScrollView
+    <ParallaxScrollView
       headerBar={
         <HeaderBar
           backgroundColor="#fafafa"
@@ -59,6 +59,6 @@ export default function DetailEventScreen() {
         borderColor="#B6B6B6"
         borderWidth={1}
       />
-    </NormalScrollView>
+    </ParallaxScrollView>
   );
 }
