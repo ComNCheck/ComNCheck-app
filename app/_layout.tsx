@@ -71,6 +71,7 @@ export default function RootLayout() {
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
       <GestureHandlerRootView style={{ flex: 1 }}>
         <Stack
+          initialRouteName="splash"
           screenOptions={{
             headerTitleStyle: { fontFamily: "Pretendard-Bold" },
             headerBackTitleStyle: { fontFamily: "Pretendard-Regular" },
