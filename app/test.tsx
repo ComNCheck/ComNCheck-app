@@ -1,5 +1,5 @@
-import ModifyRoleScreen from "./(tabs)/my/modifyRole";
+import AppliedEventScreen from "./(tabs)/my/appliedEvent";
 
 export default function TestScreen() {
-  return <ModifyRoleScreen />;
+  return <AppliedEventScreen />;
 }
