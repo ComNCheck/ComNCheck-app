@@ -5,6 +5,7 @@ export const useMemberData = () => {
   const [role, setRole] = useState<UserRole>("ROLE_STUDENT");
   const [name, setName] = useState<string>("이름");
   const [studentId, setStudentId] = useState<string>("학번");
+  const [major, setMajor] = useState<string>("전공");
 
   useEffect(() => {
     const fetchMemberData = async () => {
@@ -22,7 +23,7 @@ export const useMemberData = () => {
           name: "이예림",
           major: "컴퓨터공학과",
           studentNumber: 20230001,
-          role: "ROLE_STUDENT_COUNCIL",
+          role: "ROLE_MAJOR_PRESIDENT",
           checkStudentCard: true,
         };
         //등급
@@ -35,6 +36,7 @@ export const useMemberData = () => {
         // 전체 회원 정보 상태 업데이트
         setRole(memberData.role);
         setName(memberData.name);
+        setMajor(memberData.major);
 
         // 학번 처리 로직
         if (
@@ -56,5 +58,5 @@ export const useMemberData = () => {
     fetchMemberData();
   }, []);
 
-  return { role, name, studentId };
+  return { role, name, studentId, major };
 };

@@ -1,5 +1,5 @@
-import CurriculumScreen from "./(setting)/curriculum";
+import AppliedEventScreen from "./(tabs)/my/appliedEvent";
 
 export default function TestScreen() {
-  return <CurriculumScreen />;
+  return <AppliedEventScreen />;
 }
