@@ -4,7 +4,7 @@ import AppliedEventCard from "@/components/my/appliedEvent/AppliedEventCard";
 import SegmentedToggle from "@/components/ui/SegmentedToggle";
 import { useAppliedEvents } from "@/mock/my/useAppliedEvents";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
+import { Href, useRouter } from "expo-router";
 import { useMemo, useState } from "react";
 import { FlatList, Pressable, ScrollView, Text, View } from "react-native";
 
@@ -95,7 +95,10 @@ export default function AppliedEventScreen() {
         />
 
         <View className="h-6" />
-        <CompleteButton content="행사 제안" onPress={() => {}} />
+        <CompleteButton
+          content="행사 제안"
+          onPress={() => router.push("/(tabs)/my/appliedEvent/propose" as Href)}
+        />
         <View className="h-8" />
       </ScrollView>
     </View>
