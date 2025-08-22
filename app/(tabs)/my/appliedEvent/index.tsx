@@ -44,7 +44,9 @@ export default function AppliedEventScreen() {
           </View>
         }
       >
-        <Pressable onPress={() => router.push("/(tabs)/my/writingCheck")}>
+        <Pressable
+          onPress={() => router.push("/(tabs)/my/appliedEvent/mine" as Href)}
+        >
           <Text className="text-base font-semibold text-[#6B7280]">
             내가 쓴 행사 확인하기
           </Text>
