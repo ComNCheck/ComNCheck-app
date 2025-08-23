@@ -28,12 +28,7 @@ export default function AnswerEdit() {
   }, [item]);
 
   const insets = useSafeAreaInsets();
-  let bottom = 0;
-  try {
-    bottom = useBottomTabOverflow();
-  } catch (e) {
-    bottom = 0;
-  }
+  const bottom = useBottomTabOverflow();
   const floatingBottomOffset = bottom + insets.bottom + 12;
 
   const handleSubmit = () => {
