@@ -1,4 +1,5 @@
 import CompleteButton from "@/components/button/CompleteBtn";
+import AnswerCard from "@/components/ui/AnswerCard";
 import SettinglView from "@/components/view/SettingView";
 import { Entypo } from "@expo/vector-icons";
 import { useState } from "react";
@@ -6,17 +7,20 @@ import { ScrollView, Text, TextInput, View } from "react-native";
 
 export default function ToDeveloperScreen() {
   const [messageInput, setMessageInput] = useState<string>("");
-  const [submitMessage, setSubmitMessage] = useState<string[]>([]);
-  const handlePlus = () => {
-    console.log("메시지 추가");
-    if (messageInput?.trim().length > 0) {
-      setSubmitMessage([...submitMessage, messageInput.trim()]);
-      setMessageInput("");
-    }
-  };
+  const [messages, setMessages] = useState<string[]>([]);
+  // const handlePlus = () => {
+  //   console.log("메시지 추가");
+  //   if (messageInput?.trim().length > 0) {
+  //     setSubmitMessage([...submitMessage, messageInput.trim()]);
+  //     setMessageInput("");
+  //   }
+  // };
   const handleSubmit = () => {
     console.log("메시지 제출");
-    setSubmitMessage([]);
+    if (messageInput?.trim().length > 0) {
+      setMessages([...messages, messageInput.trim()]);
+      setMessageInput("");
+    }
   };
   return (
     <SettinglView>
@@ -35,13 +39,14 @@ export default function ToDeveloperScreen() {
 
         <View className="gap-2">
           <TextInput
-            className="w-full h-32 border-[1px] border-[#a6a6a6] rounded-md p-4"
+            className="w-full h-32 border-[1px] border-[#E6E6E6] rounded-xl p-4"
             placeholder="개발자에게 원하는 점을 적어주세요"
             style={{ textAlignVertical: "top" }}
+            multiline
             onChangeText={setMessageInput}
             value={messageInput}
           ></TextInput>
-          <CompleteButton
+          {/* <CompleteButton
             backgroundColor="#EBEBEB"
             content={
               <View className="flex-row items-center gap-2 border-[#b6b6b6]">
@@ -52,7 +57,12 @@ export default function ToDeveloperScreen() {
               </View>
             }
             onPress={handlePlus}
-          />
+          /> */}
+          <View className="gap-2">
+            {messages.map((msg, index) => (
+              <AnswerCard key={index} answer={msg} />
+            ))}
+          </View>
           <CompleteButton
             content={
               <View className="flex-row items-center gap-2">
