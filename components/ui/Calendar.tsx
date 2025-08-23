@@ -136,6 +136,13 @@ export function Calendar({
                 cell.getMonth() === date.getMonth() &&
                 cell.getDate() === date.getDate();
 
+              // 오늘 날짜인지 확인
+              const today = new Date();
+              const isToday =
+                cell.getFullYear() === today.getFullYear() &&
+                cell.getMonth() === today.getMonth() &&
+                cell.getDate() === today.getDate();
+
               return (
                 <View key={dayIdx} style={styles.dayCell}>
                   <TouchableOpacity
@@ -143,6 +150,7 @@ export function Calendar({
                       styles.dayCircle,
                       hasEvent && styles.dayCircleEvent,
                       isSelected && styles.dayCircleSelected,
+                      isToday && styles.dayCircleToday,
                     ]}
                     onPress={() => handleDayClick(cell)}
                     activeOpacity={0.7}
@@ -152,6 +160,7 @@ export function Calendar({
                         styles.dayText,
                         hasEvent && styles.dayTextEvent,
                         isSelected && styles.dayTextSelected,
+                        isToday && styles.dayTextToday,
                       ]}
                     >
                       {cell.getDate()}
@@ -169,7 +178,7 @@ export function Calendar({
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#fff",
+    backgroundColor: "#fafafa",
   },
   header: {
     flexDirection: "row",
@@ -225,7 +234,7 @@ const styles = StyleSheet.create({
     borderRadius: 24,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#fff",
+    backgroundColor: "#FAFAFA",
     borderWidth: 1,
     borderColor: "transparent",
   },
@@ -248,6 +257,13 @@ const styles = StyleSheet.create({
   },
   dayTextSelected: {
     color: "#357ae1",
+    fontWeight: "700",
+  },
+  dayCircleToday: {
+    backgroundColor: "#357ae1",
+  },
+  dayTextToday: {
+    color: "#fff",
     fontWeight: "700",
   },
   dayEmpty: {
