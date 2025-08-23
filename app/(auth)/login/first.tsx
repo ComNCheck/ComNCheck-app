@@ -35,7 +35,7 @@ export default function LoginFirst() {
     if (id === "1") {
       router.push("/(auth)/signup");
     } else {
-      router.push("/(tabs)");
+      router.push("/(tabs)/notice");
     }
   };
 
