@@ -51,8 +51,6 @@ export default function MyWritingListDetail() {
             <Text className="text-base text-text">{item.title}</Text>
           </ShadowBox>
 
-          <View className="h-4" />
-
           <ShadowBox>
             <View className="flex-row items-center justify-between mb-3">
               <Text className="text-lg font-semibold text-[#1b1b1b]">
