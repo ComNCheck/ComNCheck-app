@@ -30,7 +30,7 @@ export default function Login() {
         </Text>
         <Text
           className="text-text font-semibold"
-          onPress={() => router.push("/(tabs)")} //임시 라우팅
+          onPress={() => router.push("/(tabs)/notice")} //임시 라우팅
         >
           관리자에게 문의하기
         </Text>
