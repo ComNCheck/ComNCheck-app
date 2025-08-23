@@ -58,7 +58,7 @@ const CalendarScreen = () => {
         />
       }
     >
-      <View className="px-4">
+      <View>
         {/* 제목과 설명 */}
         <SubTitle
           title="행사 한눈에 보기"
