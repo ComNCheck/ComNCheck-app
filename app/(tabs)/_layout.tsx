@@ -47,7 +47,11 @@ export default function TabLayout() {
         options={{
           title: "공지",
           tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="house" color={color} />
+            <MaterialCommunityIcons
+              name="checkbox-blank-badge-outline"
+              size={24}
+              color={color}
+            />
           ),
         }}
       />
