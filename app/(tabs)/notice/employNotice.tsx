@@ -15,8 +15,8 @@ export default function EmployNoticeScreen() {
           backgroundColor="#fafafa"
           left={
             <Pressable
-              //onPress={() => router.back()}
-              onPress={() => router.push("/(tabs)/notice")}
+              onPress={() => router.back()}
+              //onPress={() => router.push("/(tabs)/notice")}
               className="flex-row items-center"
             >
               <Entypo name="chevron-left" size={30} color="#3a3a3a" />
