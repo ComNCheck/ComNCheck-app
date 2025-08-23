@@ -1,32 +1,22 @@
 import HeaderBar from "@/components/HeaderBar";
 import SubTitle from "@/components/title/SubTitle";
 import { Calendar } from "@/components/ui/Calendar";
+import CalendarEventCard from "@/components/ui/CalendarEventCard";
 import ParallaxScrollView from "@/components/view/ParallaxScrollView";
+import {
+  getAnotherMajorEvent,
+  getMajorEvent,
+  majorEventItem,
+} from "@/mock/calendar/api";
 import { useEffect, useState } from "react";
 import { Text, View } from "react-native";
-import CalendarEventCard from "../../../components/ui/CalendarEventCard";
-import { getAnotherMajorEvent, getMajorEvent } from "../../apis/notice";
-
-interface CalendarEvent {
-  id: number;
-  title: string;
-  date: string;
-  location: string;
-  buttonText: string;
-}
-
-interface MajorEventItem {
-  id: number;
-  eventName: string;
-  date: string;
-  location?: string;
-}
 
 const CalendarScreen = () => {
-  const [events, setEvents] = useState<CalendarEvent[]>([]);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
+  const [selectedEvents, setSelectedEvents] = useState<majorEventItem[]>([]);
+  const [events, setEvents] = useState<majorEventItem[]>([]);
 
-  // 데이터 불러오기
+  // 캘린더 표시용 이벤트 데이터 로딩
   useEffect(() => {
     const fetchEvents = async () => {
       try {
@@ -35,19 +25,7 @@ const CalendarScreen = () => {
           getAnotherMajorEvent(),
         ]);
 
-        const parseEvent = (item: MajorEventItem): CalendarEvent => ({
-          id: item.id,
-          title: item.eventName,
-          date: item.date, // string 그대로 저장
-          location: item.location || "",
-          buttonText: "신청하기",
-        });
-
-        const allEvents: CalendarEvent[] = [
-          ...(majorEvents || []).map(parseEvent),
-          ...(anotherEvents || []).map(parseEvent),
-        ];
-
+        const allEvents = [...(majorEvents || []), ...(anotherEvents || [])];
         setEvents(allEvents);
       } catch (e) {
         console.error("행사 데이터 불러오기 실패", e);
@@ -56,14 +34,10 @@ const CalendarScreen = () => {
     fetchEvents();
   }, []);
 
-  // 해당 날짜에 행사가 있는지 확인
-  const eventOnSelectedDate = events.find(
-    (e) =>
-      selectedDate &&
-      new Date(e.date).getFullYear() === selectedDate.getFullYear() &&
-      new Date(e.date).getMonth() === selectedDate.getMonth() &&
-      new Date(e.date).getDate() === selectedDate.getDate()
-  );
+  // CalendarEventCard에서 전달받은 선택된 이벤트들 처리
+  const handleSelectedEventsChange = (events: majorEventItem[]) => {
+    setSelectedEvents(events);
+  };
 
   // 캘린더에 표시할 날짜에 행사 있는지 확인
   function isEventDay(date: Date) {
@@ -74,11 +48,6 @@ const CalendarScreen = () => {
         new Date(e.date).getDate() === date.getDate()
     );
   }
-
-  const handleEventPress = () => {
-    // 이벤트 신청 로직 구현
-    console.log("이벤트 신청하기");
-  };
 
   return (
     <ParallaxScrollView
@@ -102,7 +71,7 @@ const CalendarScreen = () => {
             mode="single"
             selected={selectedDate}
             onSelect={setSelectedDate}
-            month={new Date(2025, 4, 1)}
+            month={new Date()}
             modifiers={{
               event: isEventDay,
             }}
@@ -115,12 +84,25 @@ const CalendarScreen = () => {
         {/* 구분선 */}
         <View className="h-px bg-gray-200 my-8" />
 
-        {/* 선택된 날짜의 이벤트 카드 */}
-        {eventOnSelectedDate && (
-          <CalendarEventCard
-            event={eventOnSelectedDate}
-            onPress={handleEventPress}
-          />
+        {/* 이벤트 카드 */}
+        <CalendarEventCard
+          selectedDate={selectedDate}
+          onSelectedEventsChange={handleSelectedEventsChange}
+          showOnlySelected={false}
+        />
+
+        {/* 선택된 이벤트 목록 표시 (옵션) */}
+        {selectedEvents.length > 0 && (
+          <View className="mt-6 p-4 bg-blue-50 rounded-lg">
+            <Text className="text-base font-semibold text-blue-800 mb-2">
+              선택된 행사 ({selectedEvents.length}개)
+            </Text>
+            {selectedEvents.map((event) => (
+              <Text key={event.id} className="text-sm text-blue-700 mb-1">
+                • {event.eventName}
+              </Text>
+            ))}
+          </View>
         )}
       </View>
     </ParallaxScrollView>
