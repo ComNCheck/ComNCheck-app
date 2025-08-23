@@ -13,16 +13,10 @@ import { Alert, Pressable, Text, TextInput, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function QuestionScreen() {
-  const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [isPublic, setIsPublic] = useState(true);
   const insets = useSafeAreaInsets();
-  let bottom = 0;
-  try {
-    bottom = useBottomTabOverflow();
-  } catch (e) {
-    bottom = 0;
-  }
+  const bottom = useBottomTabOverflow();
   const floatingBottomOffset = bottom + insets.bottom + 12; // 버튼을 탭바 위로 띄우기 위한 오프셋
 
   const handleSubmit = () => {
