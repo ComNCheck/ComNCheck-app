@@ -45,7 +45,7 @@ export default function SignupDone() {
         </Text>
         <TouchableOpacity
           style={[styles.button]}
-          onPress={() => router.push("/(tabs)")} //임시 라우팅
+          onPress={() => router.push("/(tabs)/notice")} //임시 라우팅
         >
           <Text style={styles.font}>다음 단계로</Text>
         </TouchableOpacity>
