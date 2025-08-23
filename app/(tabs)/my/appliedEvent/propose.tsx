@@ -1,6 +1,7 @@
 import CompleteButton from "@/components/button/CompleteBtn";
 import HeaderBar from "@/components/HeaderBar";
 import SubTitle from "@/components/title/SubTitle";
+import ShadowBox from "@/components/ui/ShadowBox";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import {
@@ -39,7 +40,7 @@ export default function ProposeEventScreen() {
       />
 
       <ScrollView
-        className="flex-1 px-5 pt-[140px]"
+        className="flex-1 px-5 pt-[100px]"
         contentContainerStyle={{ paddingBottom: 120 }}
       >
         <SubTitle
@@ -49,30 +50,36 @@ export default function ProposeEventScreen() {
 
         <View className="gap-3 mb-6">
           <Text className="text-lg font-black">행사명</Text>
-          <TextInput
-            placeholder="행사 종류를 입력해주세요"
-            className="border-[#FAFAFA] border-[0.5px] text-[#A6A6A6] rounded-lg p-4"
-          />
+          <ShadowBox>
+            <TextInput
+              placeholder="행사 종류를 입력해주세요"
+              className="border-[#FAFAFA] border-[0.5px] text-[#A6A6A6] rounded-lg p-1"
+            />
+          </ShadowBox>
         </View>
 
         <View className="gap-3 mb-6">
           <Text className="text-lg font-black">행사 소개</Text>
-          <TextInput
-            placeholder="어떤 방식의 행사인지 소개해주세요"
-            className="border-[#FAFAFA] border-[0.5px] text-[#A6A6A6] rounded-lg p-4 h-40"
-            style={{ textAlignVertical: "top" }}
-            multiline
-          />
+          <ShadowBox>
+            <TextInput
+              placeholder="어떤 방식의 행사인지 소개해주세요"
+              className="border-[#FAFAFA] border-[0.5px] text-[#A6A6A6] rounded-lg h-40"
+              style={{ textAlignVertical: "top" }}
+              multiline
+            />
+          </ShadowBox>
         </View>
 
         <View className="gap-3 mb-10">
           <Text className="text-lg font-black">학생회에게 한마디</Text>
-          <TextInput
-            placeholder="추가적으로 하고 싶은말이 있다면 적어주세요"
-            className="border-[#FAFAFA] border-[0.5px] text-[#A6A6A6] rounded-lg p-4 h-40"
-            style={{ textAlignVertical: "top" }}
-            multiline
-          />
+          <ShadowBox>
+            <TextInput
+              placeholder="추가적으로 하고 싶은말이 있다면 적어주세요"
+              className="border-[#FAFAFA] border-[0.5px] text-[#A6A6A6] rounded-lg h-40"
+              style={{ textAlignVertical: "top" }}
+              multiline
+            />
+          </ShadowBox>
         </View>
 
         <CompleteButton content="신청하기" onPress={handleSubmit} />

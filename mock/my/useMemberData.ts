@@ -23,7 +23,7 @@ export const useMemberData = () => {
           name: "이예림",
           major: "컴퓨터공학과",
           studentNumber: 20230001,
-          role: "ROLE_MAJOR_PRESIDENT",
+          role: "ROLE_STUDENT",
           checkStudentCard: true,
         };
         //등급
