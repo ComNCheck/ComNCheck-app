@@ -17,18 +17,7 @@ const roleLabels: Record<string, string> = {
   ROLE_GRADUATE_STUDENT: "졸업생",
 };
 
-function InfoRow({ label, value }: { label: string; value: React.ReactNode }) {
-  return (
-    <View className="w-full flex-row items-center justify-between mb-4">
-      <Text className="text-base font-bold text-text w-[80px]">{label}</Text>
-      <View className="flex-1 items-start">
-        <View className="min-w-[200px] bg-white rounded-lg border-[#E5E7EB] border-[0.5px] px-4 py-3">
-          <Text className="text-base font-semibold text-text">{value}</Text>
-        </View>
-      </View>
-    </View>
-  );
-}
+// Removed unused InfoRow component
 
 export default function ModifyRoleDetailScreen() {
   const { role, name, studentId, major } = useMemberData();
