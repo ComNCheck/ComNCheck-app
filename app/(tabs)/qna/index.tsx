@@ -3,24 +3,17 @@ import AnsweredListItem from "@/components/my/AnsweredListItem";
 import SubTitle from "@/components/title/SubTitle";
 import { useBottomTabOverflow } from "@/components/ui/TabBarBackground";
 import ParallaxScrollView from "@/components/view/ParallaxScrollView";
-import { useMemberData } from "@/mock/my/useMemberData";
+// removed unused useMemberData
 import { useMyQuestions } from "@/mock/my/useMyQuestions";
 import { router } from "expo-router";
 import { Text, View } from "react-native"; // View를 올바른 위치에서 import
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+// removed unused useSafeAreaInsets
 
 export default function QnATab() {
-  const { role, name, studentId } = useMemberData();
-  const insets = useSafeAreaInsets();
   const { questions } = useMyQuestions();
   const answered = questions.filter((q) => q.status === "answered");
 
-  let bottom = 0;
-  try {
-    bottom = useBottomTabOverflow();
-  } catch (e) {
-    bottom = 0;
-  }
+  const bottom = useBottomTabOverflow();
 
   return (
     <>
