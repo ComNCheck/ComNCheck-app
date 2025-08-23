@@ -214,11 +214,11 @@ const styles = StyleSheet.create({
   },
   weekdayText: {
     color: "#222",
-    fontSize: 18,
+    fontSize: 14,
     fontWeight: "700",
   },
   calendarBody: {
-    gap: 12,
+    gap: 8,
   },
   weekRow: {
     flexDirection: "row",
@@ -226,12 +226,12 @@ const styles = StyleSheet.create({
   dayCell: {
     flex: 1,
     alignItems: "center",
-    paddingVertical: 3,
+    paddingVertical: 2,
   },
   dayCircle: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
+    width: 36,
+    height: 36,
+    borderRadius: 18,
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "#FAFAFA",
@@ -248,7 +248,7 @@ const styles = StyleSheet.create({
   },
   dayText: {
     fontWeight: "600",
-    fontSize: 18,
+    fontSize: 14,
     color: "#2d3a3a",
   },
   dayTextEvent: {
@@ -267,7 +267,7 @@ const styles = StyleSheet.create({
     fontWeight: "700",
   },
   dayEmpty: {
-    width: 48,
-    height: 48,
+    width: 36,
+    height: 36,
   },
 });
