@@ -1,12 +1,11 @@
 import HeaderBar from "@/components/HeaderBar";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import * as ImagePicker from "expo-image-picker";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import {
   Alert,
-  Button,
   Modal,
   Pressable,
   StyleSheet,
@@ -109,11 +108,19 @@ export default function Signup() {
             </Pressable>
           </Modal>
         </View>
-        <Button title="사진 선택" onPress={pickImage} />
+        {!selectedImage && (
+          <TouchableOpacity
+            onPress={pickImage}
+            className="w-[70%] h-60 border-[1px] border-[#D9D9D9] rounded-2xl items-center justify-center"
+          >
+            <MaterialIcons name="camera-enhance" size={24} color="#D9D9D9" />
+          </TouchableOpacity>
+        )}
+
         {selectedImage && (
           <Image
             source={{ uri: selectedImage }}
-            style={{ width: 200, height: 200, marginTop: 10, borderRadius: 10 }}
+            style={{ width: 200, height: 240, marginTop: 10, borderRadius: 10 }}
           />
         )}
 
