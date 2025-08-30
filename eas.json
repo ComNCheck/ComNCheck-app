@@ -1,0 +1,29 @@
+{
+  "cli": {
+    "version": ">= 16.17.4",
+    "appVersionSource": "remote"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "ios": {
+        "simulator": true
+      },
+      "env": {
+        "EXPO_PUBLIC_GOOGLE_CLIENT_ID": "secret",
+        "EXPO_PUBLIC_IOS_CLIENT_ID": "secret",
+        "EXPO_PUBLIC_ANDROID_CLIENT_ID": "secret"
+      }
+    },
+    "preview": {
+      "distribution": "internal"
+    },
+    "production": {
+      "autoIncrement": true
+    }
+  },
+  "submit": {
+    "production": {}
+  }
+}
