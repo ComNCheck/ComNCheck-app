@@ -12,7 +12,8 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-WebBrowser.maybeCompleteAuthSession();
+
+WebBrowser.maybeCompleteAuthSession(); // 앱 시작 시 1회
 
 export default function Login() {
   const router = useRouter();
@@ -20,95 +21,79 @@ export default function Login() {
   const IOS_CLIENT_ID = process.env.EXPO_PUBLIC_IOS_CLIENT_ID!;
   const ANDROID_CLIENT_ID = process.env.EXPO_PUBLIC_ANDROID_CLIENT_ID!;
 
-  // 네이티브 빌드 시 안정적인 리다이렉트 URI 설정
+  // 네이티브 리디렉트 URI (구글 전용 스킴)
   const ANDROID_SCHEME = `com.googleusercontent.apps.${ANDROID_CLIENT_ID.replace(".apps.googleusercontent.com", "")}`;
   const IOS_SCHEME = `com.googleusercontent.apps.${IOS_CLIENT_ID.replace(".apps.googleusercontent.com", "")}`;
-
   const redirectUri = AuthSession.makeRedirectUri({
     native: Platform.select({
       android: `${ANDROID_SCHEME}:/oauthredirect`,
       ios: `${IOS_SCHEME}:/oauthredirect`,
     }),
   });
-  console.log("Redirect URI:", redirectUri);
-  console.log("ANDROID_CLIENT_ID =", ANDROID_CLIENT_ID);
+
+  console.log("[AUTH] redirectUri:", redirectUri);
+  console.log("[AUTH] androidClientId:", ANDROID_CLIENT_ID);
 
   const [request, response, promptAsync] = Google.useAuthRequest({
     webClientId: GOOGLE_CLIENT_ID,
     iosClientId: IOS_CLIENT_ID,
     androidClientId: ANDROID_CLIENT_ID,
     redirectUri,
-    scopes: ["profile", "email"],
+    scopes: ["openid", "email", "profile"],
     responseType: "code",
   });
-  // 1) 버튼
+
   const onPressGoogle = async () => {
-    console.log("[AUTH] redirectUri =", redirectUri);
-    console.log("[AUTH] authUrl =", request?.url);
+    console.log("[AUTH] start → redirectUri =", redirectUri);
     try {
+      // 👉 디버그용 전역 저장 (리다이렉트 화면에서 꺼내 쓰기)
+      (globalThis as any).__pkce = request?.codeVerifier ?? "";
+      (globalThis as any).__redirectUri = redirectUri;
+      (globalThis as any).__clientId =
+        Platform.select({
+          android: ANDROID_CLIENT_ID,
+          ios: IOS_CLIENT_ID,
+          default: GOOGLE_CLIENT_ID,
+        }) ?? "";
+
       const res = await promptAsync();
-      console.log("[AUTH] promptAsync:", JSON.stringify(res, null, 2));
+      console.log("[AUTH] promptAsync result.type:", res.type);
+      const p = (res as any)?.params as Record<string, string> | undefined;
+      if (res.type === "success" && p?.code) {
+        console.log("✅ [AUTH] CODE (from promptAsync):", p.code);
+      } else if (res.type !== "success") {
+        console.log("ℹ️ [AUTH] non-success:", res.type, p?.error ?? "");
+      }
     } catch (e) {
       console.log("[AUTH] promptAsync error:", e);
     }
   };
 
-  // 2) 딥링크 로거
+  // (참고) 이벤트 로깅만 유지
   useEffect(() => {
     const sub = Linking.addEventListener("url", (e) => {
-      console.log("[DEEP_LINK]", e.url);
+      console.log("[DEEP_LINK event]", e.url);
     });
     return () => sub.remove();
   }, []);
 
-  // 3) 응답 로거
+  useEffect(() => {
+    (async () => {
+      const initial = await Linking.getInitialURL();
+      console.log("[DEEP_LINK initialURL]", initial ?? "(none)");
+    })();
+  }, []);
+
+  // (선택) 표준 경로도 유지
   useEffect(() => {
     if (!response) return;
-    console.log("[AUTH] response RAW:", JSON.stringify(response, null, 2));
-    if (response.type === "success") {
-      const { code } = response.params as { code: string };
-      console.log("✅ CODE:", code);
-    } else {
-      console.log("ℹ️ type:", response.type, response.error);
+    console.log("[AUTH] response.type:", response.type);
+    const p = (response as any)?.params as Record<string, string> | undefined;
+    if (response.type === "success" && p?.code) {
+      console.log("✅ [AUTH] CODE (from response):", p.code);
     }
   }, [response]);
 
-  const sendCodeToBackend = async (code: string) => {
-    try {
-      const backendUrl = "https://www.comncheck.com";
-      const response = await fetch(backendUrl, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ code, redirectUri }),
-      });
-
-      const data = await response.json();
-
-      if (data.success) {
-        // 인증 성공 후, 백엔드에서 받은 토큰 등을 처리
-        console.log("Login successful!", data);
-        // await AsyncStorage.setItem('userToken', data.token);
-        router.push("/(auth)/login/first");
-      } else {
-        console.error("Backend login failed:", data.message);
-      }
-    } catch (error) {
-      console.error("Error communicating with backend:", error);
-    }
-  };
-
-  const handlePress = async () => {
-    const url = "https://www.instagram.com/comncheck"; // 연결하려는 웹사이트 URL
-    const supported = await Linking.canOpenURL(url);
-
-    if (supported) {
-      await Linking.openURL(url);
-    } else {
-      console.log(`Don't know how to open this URL: ${url}`);
-    }
-  };
   return (
     <View className="flex-1 flex-col justify-center items-center bg-white">
       <Image
@@ -120,29 +105,22 @@ export default function Login() {
       <Text className="text-lg font-normal m-1">
         학교 계정으로 로그인해주세요!
       </Text>
+
       <TouchableOpacity
         style={[styles.button]}
         disabled={!request}
         onPress={onPressGoogle}
-        //onPress={() => router.push("/(auth)/login/first")} //임시 라우팅
       >
         <Image
           source={require("@/assets/images/google.png")}
           style={{ width: 28, height: 28, marginRight: 10 }}
         />
-        <Text style={styles.font}>Sign up with google</Text>
+        <Text style={styles.font}>Sign up with Google</Text>
       </TouchableOpacity>
-      <View className="flex-row items-center justify-center gap-2">
-        <Text className="text-[#B6B6B6] text-lg">
-          아직 학교 계정이 없으신가요?
-        </Text>
-        <Text className="text-text font-semibold" onPress={handlePress}>
-          관리자에게 문의하기
-        </Text>
-      </View>
     </View>
   );
 }
+
 const styles = StyleSheet.create({
   button: {
     backgroundColor: "#ffffff",
@@ -151,16 +129,11 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     borderWidth: 1,
     borderColor: "#747775",
-
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
     marginTop: 10,
     marginBottom: 10,
   },
-  font: {
-    fontWeight: "500",
-    fontSize: 20,
-    color: "#1F1F1F",
-  },
+  font: { fontWeight: "500", fontSize: 20, color: "#1F1F1F" },
 });
