@@ -3,8 +3,10 @@ import * as Google from "expo-auth-session/providers/google";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import * as WebBrowser from "expo-web-browser";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
+  ActivityIndicator,
+  Alert, // Alert 컴포넌트 추가
   Linking,
   Platform,
   StyleSheet,
@@ -13,10 +15,14 @@ import {
   View,
 } from "react-native";
 
+// 새로 생성한 API 파일을 임포트합니다.
+import { memberLoginByBody } from "@/app/apis/auth";
+
 WebBrowser.maybeCompleteAuthSession(); // 앱 시작 시 1회
 
 export default function Login() {
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false); // 로딩 상태 관리
   const GOOGLE_CLIENT_ID = process.env.EXPO_PUBLIC_GOOGLE_CLIENT_ID;
   const IOS_CLIENT_ID = process.env.EXPO_PUBLIC_IOS_CLIENT_ID!;
   const ANDROID_CLIENT_ID = process.env.EXPO_PUBLIC_ANDROID_CLIENT_ID!;
@@ -56,16 +62,42 @@ export default function Login() {
           default: GOOGLE_CLIENT_ID,
         }) ?? "";
 
+      setIsLoading(true); // 로그인 절차 시작 시 로딩 상태 활성화
       const res = await promptAsync();
       console.log("[AUTH] promptAsync result.type:", res.type);
       const p = (res as any)?.params as Record<string, string> | undefined;
+
       if (res.type === "success" && p?.code) {
         console.log("✅ [AUTH] CODE (from promptAsync):", p.code);
+
+        try {
+          const payload = { authorizationCode: p.code };
+          console.log(
+            "🟡 [API] 인가 코드를 서버에 전송합니다. 전송 데이터:",
+            payload
+          );
+          // 서버로 인가 코드 전송
+          const tokens = await memberLoginByBody({ authorizationCode: p.code });
+
+          // TODO: 받은 토큰을 AsyncStorage 등에 저장하는 로직 추가
+          console.log("⭐ [AUTH] 서버로부터 받은 토큰:", tokens);
+
+          // API 연결 성공 시 콘솔 로그가 출력되도록 잠시 대기
+          await new Promise((resolve) => setTimeout(resolve, 100));
+
+          // 다음 화면으로 이동
+          router.replace("/login/first");
+        } catch (apiError) {
+          console.log("❌ [API] 서버 통신 오류:", apiError);
+          Alert.alert("로그인 실패", "서버와 통신하는 중 문제가 발생했습니다.");
+        }
       } else if (res.type !== "success") {
         console.log("ℹ️ [AUTH] non-success:", res.type, p?.error ?? "");
       }
     } catch (e) {
-      console.log("[AUTH] promptAsync error:", e);
+      console.log("[AUTH] promptAsync or general error:", e);
+    } finally {
+      setIsLoading(false); // 로그인 절차 완료 시 로딩 상태 비활성화
     }
   };
 
@@ -108,14 +140,20 @@ export default function Login() {
 
       <TouchableOpacity
         style={[styles.button]}
-        disabled={!request}
+        disabled={!request || isLoading} // 로딩 중일 때 버튼 비활성화
         onPress={onPressGoogle}
       >
-        <Image
-          source={require("@/assets/images/google.png")}
-          style={{ width: 28, height: 28, marginRight: 10 }}
-        />
-        <Text style={styles.font}>Sign up with Google</Text>
+        {isLoading ? (
+          <ActivityIndicator size="small" color="#1F1F1F" />
+        ) : (
+          <>
+            <Image
+              source={require("@/assets/images/google.png")}
+              style={{ width: 28, height: 28, marginRight: 10 }}
+            />
+            <Text style={styles.font}>Sign up with Google</Text>
+          </>
+        )}
       </TouchableOpacity>
     </View>
   );
