@@ -37,7 +37,11 @@ export default function Login() {
     }),
   });
 
-  console.log("[AUTH] redirectUri:", redirectUri);
+  //console.log("[AUTH] redirectUri:", redirectUri);
+  console.log(
+    "[AUTH] redirectUri for this platform:",
+    Platform.OS === "ios" ? redirectUri : "(Not used for Android Native Auth)"
+  );
   console.log("[AUTH] androidClientId:", ANDROID_CLIENT_ID);
 
   const [request, response, promptAsync] = Google.useAuthRequest({
