@@ -56,16 +56,6 @@ export default function Login() {
   const onPressGoogle = async () => {
     console.log("[AUTH] start → redirectUri =", redirectUri);
     try {
-      // 👉 디버그용 전역 저장 (리다이렉트 화면에서 꺼내 쓰기)
-      (globalThis as any).__pkce = request?.codeVerifier ?? "";
-      (globalThis as any).__redirectUri = redirectUri;
-      (globalThis as any).__clientId =
-        Platform.select({
-          android: ANDROID_CLIENT_ID,
-          ios: IOS_CLIENT_ID,
-          default: GOOGLE_CLIENT_ID,
-        }) ?? "";
-
       setIsLoading(true); // 로그인 절차 시작 시 로딩 상태 활성화
       const res = await promptAsync();
       console.log("[AUTH] promptAsync result.type:", res.type);

@@ -15,13 +15,15 @@ export const api = axios.create({
 // 요청 인터셉터: Bearer 토큰 자동 첨부
 api.interceptors.request.use(async (config) => {
   const token = await getAccessToken();
-  console.log(
-    "[HTTP]",
-    config.method?.toUpperCase(),
-    config.url,
-    "body:",
-    config.data
-  );
+  if (__DEV__) {
+    console.log(
+      "[HTTP]",
+      config.method?.toUpperCase(),
+      config.url,
+      "body:",
+      config.data
+    );
+  }
   if (token) {
     config.headers = config.headers ?? {};
     (config.headers as any).Authorization = `Bearer ${token}`;

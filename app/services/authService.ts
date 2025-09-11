@@ -14,6 +14,11 @@ export const authService = {
     // if (!data?.success || !data?.access_token) {
     //   throw new Error(data?.message ?? "로그인 실패");
     // }
+    if (!data.access_token) {
+      throw new Error(
+        "로그인에 실패했습니다. 서버로부터 유효한 토큰을 받지 못했습니다."
+      );
+    }
     await setTokens({
       accessToken: data.access_token,
       refreshToken: data.refresh_token,
