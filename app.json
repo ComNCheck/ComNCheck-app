@@ -5,17 +5,20 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/logo-square.png",
-    "scheme": [
-      "com.googleusercontent.apps.505823238853-gee9ebk5d1ludt0m98momhldhu1co1ij",
-      "com.googleusercontent.apps.505823238853-3j8i4sat8oovcrb8a7qecajmusj9g9kb"
-    ],
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.comncheck.comncheckapp",
       "infoPlist": {
-        "ITSAppUsesNonExemptEncryption": false
+        "ITSAppUsesNonExemptEncryption": false,
+        "CFBundleURLTypes": [
+          {
+            "CFBundleURLSchemes": [
+              "com.googleusercontent.apps.505823238853-3j8i4sat8oovcrb8a7qecajmusj9g9kb"
+            ]
+          }
+        ]
       }
     },
     "android": {
@@ -63,7 +66,10 @@
       "router": {},
       "eas": {
         "projectId": "f8b5ef82-797e-4d27-b02c-9659ac20fa0a"
-      }
+      },
+      "webClientId": "505823238853-pofr0j3bcn77f5okhm3h7a1a0j8sjd8h.apps.googleusercontent.com",
+      "iosClientId": "505823238853-3j8i4sat8oovcrb8a7qecajmusj9g9kb.apps.googleusercontent.com",
+      "androidClientId": "505823238853-gee9ebk5d1ludt0m98momhldhu1co1ij.apps.googleusercontent.com"
     },
     "owner": "comncheck"
   }

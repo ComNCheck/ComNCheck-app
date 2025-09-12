@@ -6,8 +6,6 @@ import * as WebBrowser from "expo-web-browser";
 import { useEffect, useState } from "react";
 import {
   ActivityIndicator,
-  Alert, // Alert 컴포넌트 추가
-  Linking,
   Platform,
   StyleSheet,
   Text,
@@ -44,10 +42,11 @@ export default function Login() {
   );
   console.log("[AUTH] androidClientId:", ANDROID_CLIENT_ID);
 
+  // 변경 포인트만 발췌 (code 플로우 기준)
   const [request, response, promptAsync] = Google.useAuthRequest({
-    webClientId: GOOGLE_CLIENT_ID,
-    iosClientId: IOS_CLIENT_ID,
-    androidClientId: ANDROID_CLIENT_ID,
+    webClientId: GOOGLE_CLIENT_ID!,
+    iosClientId: IOS_CLIENT_ID!,
+    androidClientId: ANDROID_CLIENT_ID!,
     redirectUri,
     scopes: ["openid", "email", "profile"],
     responseType: "code",
@@ -56,68 +55,51 @@ export default function Login() {
   const onPressGoogle = async () => {
     console.log("[AUTH] start → redirectUri =", redirectUri);
     try {
-      setIsLoading(true); // 로그인 절차 시작 시 로딩 상태 활성화
+      if (!request) {
+        console.log("❌ [AUTH] request not ready");
+        return;
+      }
+      setIsLoading(true);
+
       const res = await promptAsync();
       console.log("[AUTH] promptAsync result.type:", res.type);
+
       const p = (res as any)?.params as Record<string, string> | undefined;
 
-      if (res.type === "success" && p?.code) {
-        console.log("✅ [AUTH] CODE (from promptAsync):", p.code);
-
-        try {
-          const payload = { authorizationCode: p.code };
-          console.log(
-            "🟡 [API] 인가 코드를 서버에 전송합니다. 전송 데이터:",
-            payload
-          );
-          // 서버로 인가 코드 전송
-          const tokens = await memberLoginByBody({ authorizationCode: p.code });
-
-          // TODO: 받은 토큰을 AsyncStorage 등에 저장하는 로직 추가
-          console.log("⭐ [AUTH] 서버로부터 받은 토큰:", tokens);
-
-          // API 연결 성공 시 콘솔 로그가 출력되도록 잠시 대기
-          await new Promise((resolve) => setTimeout(resolve, 100));
-
-          // 다음 화면으로 이동
-          router.replace("/login/first");
-        } catch (apiError) {
-          console.log("❌ [API] 서버 통신 오류:", apiError);
-          Alert.alert("로그인 실패", "서버와 통신하는 중 문제가 발생했습니다.");
-        }
-      } else if (res.type !== "success") {
-        console.log("ℹ️ [AUTH] non-success:", res.type, p?.error ?? "");
+      if (p?.code) {
+        console.log("✅ [AUTH] CODE(from prompt):", p.code);
+        const tokens = await memberLoginByBody({ authorizationCode: p.code });
+        console.log("⭐ [AUTH] server tokens:", tokens);
+        router.replace("/login/first");
+      } else if (p?.error) {
+        console.log(
+          "❌ [AUTH] error(from prompt):",
+          p.error,
+          p.error_description ?? ""
+        );
+      } else {
+        console.log("ℹ️ [AUTH] promptAsync params empty");
       }
     } catch (e) {
-      console.log("[AUTH] promptAsync or general error:", e);
+      console.log("❌ [AUTH] promptAsync throw:", e);
     } finally {
-      setIsLoading(false); // 로그인 절차 완료 시 로딩 상태 비활성화
+      setIsLoading(false);
     }
   };
 
-  // (참고) 이벤트 로깅만 유지
-  useEffect(() => {
-    const sub = Linking.addEventListener("url", (e) => {
-      console.log("[DEEP_LINK event]", e.url);
-    });
-    return () => sub.remove();
-  }, []);
-
-  useEffect(() => {
-    (async () => {
-      const initial = await Linking.getInitialURL();
-      console.log("[DEEP_LINK initialURL]", initial ?? "(none)");
-    })();
-  }, []);
-
-  // (선택) 표준 경로도 유지
+  // 보조 로깅: 일부 환경에선 response로 들어오기도 함
   useEffect(() => {
     if (!response) return;
     console.log("[AUTH] response.type:", response.type);
     const p = (response as any)?.params as Record<string, string> | undefined;
-    if (response.type === "success" && p?.code) {
-      console.log("✅ [AUTH] CODE (from response):", p.code);
-    }
+
+    if (p?.code) console.log("✅ [AUTH] CODE(from response):", p.code);
+    if (p?.error)
+      console.log(
+        "❌ [AUTH] error(from response):",
+        p.error,
+        p.error_description ?? ""
+      );
   }, [response]);
 
   return (
