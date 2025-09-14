@@ -1,10 +1,7 @@
 import { api } from "./client";
 
 export type LoginBody = {
-  authorizationCode: string;
-  codeVerifier?: string;
-  redirectUri?: string;
-  clientId?: string;
+  idToken: string;
 };
 
 export type LoginResponse = {
@@ -16,7 +13,7 @@ export type LoginResponse = {
 
 export function memberLoginByBody(body: LoginBody) {
   const payload = {
-    authorizationCode: body.authorizationCode,
+    idToken: body.idToken,
   };
 
   return api.post<LoginResponse>("/api/v1/member/login", payload, {

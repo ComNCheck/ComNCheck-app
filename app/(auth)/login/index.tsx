@@ -1,11 +1,12 @@
-import * as AuthSession from "expo-auth-session";
-import * as Google from "expo-auth-session/providers/google";
+import {
+  GoogleSignin,
+  isSuccessResponse,
+} from "@react-native-google-signin/google-signin";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
-import * as WebBrowser from "expo-web-browser";
 import { useEffect, useState } from "react";
 import {
-  ActivityIndicator,
+  Alert,
   Platform,
   StyleSheet,
   Text,
@@ -13,123 +14,80 @@ import {
   View,
 } from "react-native";
 
-// 새로 생성한 API 파일을 임포트합니다.
-import { memberLoginByBody } from "@/app/apis/auth";
-
-WebBrowser.maybeCompleteAuthSession(); // 앱 시작 시 1회
+import { authService } from "@/app/services/authService";
 
 export default function Login() {
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false); // 로딩 상태 관리
-  const GOOGLE_CLIENT_ID = process.env.EXPO_PUBLIC_GOOGLE_CLIENT_ID;
-  const IOS_CLIENT_ID = process.env.EXPO_PUBLIC_IOS_CLIENT_ID!;
-  const ANDROID_CLIENT_ID = process.env.EXPO_PUBLIC_ANDROID_CLIENT_ID!;
+  const [isLoading, setIsLoading] = useState(false);
 
-  // 네이티브 리디렉트 URI (구글 전용 스킴)
-  const ANDROID_SCHEME = `com.googleusercontent.apps.${ANDROID_CLIENT_ID.replace(".apps.googleusercontent.com", "")}`;
-  const IOS_SCHEME = `com.googleusercontent.apps.${IOS_CLIENT_ID.replace(".apps.googleusercontent.com", "")}`;
-  const redirectUri = AuthSession.makeRedirectUri({
-    native: Platform.select({
-      android: `${ANDROID_SCHEME}:/oauthredirect`,
-      ios: `${IOS_SCHEME}:/oauthredirect`,
-    }),
-  });
+  const WEB_CLIENT_ID = process.env.EXPO_PUBLIC_WEB_CLIENT_ID;
 
-  //console.log("[AUTH] redirectUri:", redirectUri);
-  console.log(
-    "[AUTH] redirectUri for this platform:",
-    Platform.OS === "ios" ? redirectUri : "(Not used for Android Native Auth)"
-  );
-  console.log("[AUTH] androidClientId:", ANDROID_CLIENT_ID);
-
-  // 변경 포인트만 발췌 (code 플로우 기준)
-  const [request, response, promptAsync] = Google.useAuthRequest({
-    webClientId: GOOGLE_CLIENT_ID!,
-    iosClientId: IOS_CLIENT_ID!,
-    androidClientId: ANDROID_CLIENT_ID!,
-    redirectUri,
-    scopes: ["openid", "email", "profile"],
-    responseType: "code",
-  });
+  useEffect(() => {
+    GoogleSignin.configure({
+      webClientId: WEB_CLIENT_ID,
+    });
+  }, []);
+  console.log("WEB_CLIENT_ID:", WEB_CLIENT_ID ?? "");
 
   const onPressGoogle = async () => {
-    console.log("[AUTH] start → redirectUri =", redirectUri);
     try {
-      if (!request) {
-        console.log("❌ [AUTH] request not ready");
+      setIsLoading(true);
+      if (Platform.OS === "android") {
+        await GoogleSignin.hasPlayServices({
+          showPlayServicesUpdateDialog: true,
+        });
+      }
+
+      const result = await GoogleSignin.signIn();
+      if (!isSuccessResponse(result)) {
+        console.log("ℹ️ [AUTH] sign-in cancelled or no account selected");
         return;
       }
-      setIsLoading(true);
 
-      const res = await promptAsync();
-      console.log("[AUTH] promptAsync result.type:", res.type);
-
-      const p = (res as any)?.params as Record<string, string> | undefined;
-
-      if (p?.code) {
-        console.log("✅ [AUTH] CODE(from prompt):", p.code);
-        const tokens = await memberLoginByBody({ authorizationCode: p.code });
-        console.log("⭐ [AUTH] server tokens:", tokens);
-        router.replace("/login/first");
-      } else if (p?.error) {
+      const { idToken } = await GoogleSignin.getTokens();
+      if (!idToken) {
         console.log(
-          "❌ [AUTH] error(from prompt):",
-          p.error,
-          p.error_description ?? ""
+          "❌ [AUTH] idToken empty. Check webClientId & console configs."
         );
-      } else {
-        console.log("ℹ️ [AUTH] promptAsync params empty");
+        return;
       }
-    } catch (e) {
-      console.log("❌ [AUTH] promptAsync throw:", e);
+
+      console.log("✅ [AUTH] ID TOKEN:", idToken.slice(0, 32) + "...");
+      await authService.loginWithIdToken({ idToken });
+      router.replace("/(auth)/login/first");
+    } catch (e: any) {
+      console.log("code:", e?.code, "message:", e?.message);
+      Alert.alert(
+        "로그인 실패",
+        e?.message || "구글 로그인 중 오류가 발생했습니다."
+      );
     } finally {
       setIsLoading(false);
     }
   };
 
-  // 보조 로깅: 일부 환경에선 response로 들어오기도 함
-  useEffect(() => {
-    if (!response) return;
-    console.log("[AUTH] response.type:", response.type);
-    const p = (response as any)?.params as Record<string, string> | undefined;
-
-    if (p?.code) console.log("✅ [AUTH] CODE(from response):", p.code);
-    if (p?.error)
-      console.log(
-        "❌ [AUTH] error(from response):",
-        p.error,
-        p.error_description ?? ""
-      );
-  }, [response]);
-
   return (
     <View className="flex-1 flex-col justify-center items-center bg-white">
       <Image
         source={require("@/assets/images/logo-2x.png")}
-        className="w-32 h-32 rounded-xl"
-        style={{ width: 128, height: 128 }}
+        style={{ width: 128, height: 128, borderRadius: 16 }}
       />
-      <Text className="text-lg font-normal">한국외국어대학교</Text>
-      <Text className="text-lg font-normal m-1">
+      <Text style={{ fontSize: 16, marginTop: 8 }}>한국외국어대학교</Text>
+      <Text style={{ fontSize: 16, marginVertical: 8 }}>
         학교 계정으로 로그인해주세요!
       </Text>
-
       <TouchableOpacity
-        style={[styles.button]}
-        disabled={!request || isLoading} // 로딩 중일 때 버튼 비활성화
+        style={styles.button}
         onPress={onPressGoogle}
+        disabled={isLoading}
       >
-        {isLoading ? (
-          <ActivityIndicator size="small" color="#1F1F1F" />
-        ) : (
-          <>
-            <Image
-              source={require("@/assets/images/google.png")}
-              style={{ width: 28, height: 28, marginRight: 10 }}
-            />
-            <Text style={styles.font}>Sign up with Google</Text>
-          </>
-        )}
+        <>
+          <Image
+            source={require("@/assets/images/google.png")}
+            style={{ width: 28, height: 28, marginRight: 10 }}
+          />
+          <Text style={styles.font}>Sign up with Google</Text>
+        </>
       </TouchableOpacity>
     </View>
   );
