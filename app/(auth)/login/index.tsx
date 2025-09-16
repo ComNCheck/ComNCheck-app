@@ -27,8 +27,7 @@ export default function Login() {
     GoogleSignin.configure({
       webClientId: WEB_CLIENT_ID,
     });
-  }, []);
-  console.log("WEB_CLIENT_ID:", WEB_CLIENT_ID ?? "");
+  }, [WEB_CLIENT_ID]);
 
   const onPressGoogle = async () => {
     try {
