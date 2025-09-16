@@ -7,14 +7,14 @@ export const authService = {
     console.log("[LOGIN] request body:", args);
     console.log("[LOGIN] response:", data);
 
-    if (!data.access_token) {
+    if (!data.accessToken) {
       throw new Error(
         "로그인에 실패했습니다. 서버로부터 유효한 토큰을 받지 못했습니다."
       );
     }
     await setTokens({
-      accessToken: data.access_token,
-      refreshToken: data.refresh_token,
+      accessToken: data.accessToken,
+      refreshToken: data.refreshToken,
     });
     return data;
   },

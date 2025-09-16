@@ -27,6 +27,7 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
+      "usesCleartextTraffic": true,
       "package": "com.comncheck.comncheckapp",
       "intentFilters": [
         {
