@@ -2,24 +2,41 @@ import CompleteButton from "@/components/button/CompleteBtn";
 import SubTitle from "@/components/title/SubTitle";
 import CouncilName from "@/components/ui/CouncilName";
 import ShadowBox from "@/components/ui/ShadowBox";
-import SettinglView from "@/components/view/SettingView";
+import SettingView from "@/components/view/SettingView";
 import { useRouter } from "expo-router";
+import { useEffect, useState } from "react";
 import { Text, View } from "react-native";
+import { getCouncilList } from "../apis/member";
+import { Member, President } from "../apis/member.type";
 
 export default function ListScreen() {
   const router = useRouter();
+
+  const [president, setPresident] = useState<President | null>(null);
+  const [councilList, setCouncilList] = useState<Member[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
   const handleClick = () => {
     router.back();
   };
-  const councilData = [
-    { name: "박수정", position: "과회장" },
-    { name: "이예림", position: "기획국장" },
-    { name: "이예림", position: "기획국장" },
-    { name: "이예림", position: "기획국장" },
-    { name: "이예림", position: "기획국장" },
-  ];
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await getCouncilList();
+        console.log("Council List Response:", response);
+        setPresident(response.president);
+        setCouncilList(response.councilList);
+      } catch (error) {
+        console.error("Error fetching council list:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
   return (
-    <SettinglView>
+    <SettingView>
       <View className="flex-1 justify-around">
         <SubTitle
           title="학생회 명단"
@@ -30,29 +47,27 @@ export default function ListScreen() {
             <View className="flex-1 bg-white gap-4">
               <Text className="font-black text-lg gap-2">
                 👑 과회장{"  "}
-                {councilData.find((item) => item.position === "과회장")?.name}
+                {president?.name}
               </Text>
               <Text className="font-black text-lg">️🎁 학생회 </Text>
               <View className="flex-1 flex-row flex-wrap justify-between border-[#FAFAFA] border-[2px] rounded-xl p-4">
-                {councilData
-                  .filter((item) => item.position !== "과회장")
-                  .map((item, index) => (
-                    <View
-                      key={index}
-                      style={{
-                        width: "48%",
-                        marginBottom: 8,
-                      }}
-                    >
-                      <CouncilName name={item.name} position={item.position} />
-                    </View>
-                  ))}
+                {councilList?.map((item, index) => (
+                  <View
+                    key={index}
+                    style={{
+                      width: "48%",
+                      marginBottom: 8,
+                    }}
+                  >
+                    <CouncilName name={item.name} position={item.position} />
+                  </View>
+                ))}
               </View>
             </View>
           </ShadowBox>
           <CompleteButton content="확인완료" onPress={handleClick} />
         </View>
       </View>
-    </SettinglView>
+    </SettingView>
   );
 }
