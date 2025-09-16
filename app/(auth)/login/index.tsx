@@ -51,20 +51,25 @@ export default function Login() {
         );
         return;
       }
+      if (__DEV__) {
+        console.log("✅ [AUTH] ID TOKEN:", idToken.slice(0, 32) + "...");
+        console.log("[AUTH] before call");
+      }
 
-      console.log("✅ [AUTH] ID TOKEN:", idToken.slice(0, 32) + "...");
-      console.log("[AUTH] before call");
-      await authService.loginWithIdToken({ idToken }); // 2. 로그인 성공 후, 사용자 정보를 조회합니다.
+      await authService.loginWithIdToken({ idToken });
       const memberResponse = await getMemberData();
       const userName = memberResponse.data.name;
-      console.log(`[MEMBER] 사용자 이름: ${userName}`); // 3. 조회된 사용자 이름을 params로 담아 다음 화면으로 전달합니다.
-
+      if (__DEV__) {
+        console.log(`[MEMBER] 사용자 이름: ${userName}`);
+      }
       router.replace({
         pathname: "/(auth)/login/first",
         params: { name: userName },
       });
     } catch (e: any) {
-      console.log("code:", e?.code, "message:", e?.message);
+      if (__DEV__) {
+        console.log("code:", e?.code, "message:", e?.message);
+      }
       Alert.alert(
         "로그인 실패",
         e?.message || "구글 로그인 중 오류가 발생했습니다."
