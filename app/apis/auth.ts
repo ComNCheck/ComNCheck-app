@@ -1,16 +1,5 @@
-import { AuthMember } from "./auth.type";
+import { AuthMember, LoginBody, LoginResponse } from "./auth.type";
 import { api } from "./client";
-
-export type LoginBody = {
-  idToken: string;
-};
-
-export type LoginResponse = {
-  accessToken: string;
-  refreshToken: string;
-  accessTokenExpiresAt: number;
-  refreshTokenExpiresAt: number;
-};
 
 export function memberLoginByBody(body: LoginBody) {
   //id token으로 로그인

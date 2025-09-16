@@ -1,11 +1,10 @@
-import { LoginResponse, memberLoginByBody } from "@/app/apis/auth";
+import { memberLoginByBody } from "@/app/apis/auth";
+import { LoginResponse } from "../apis/auth.type";
 import { clearTokens, setTokens } from "./tokenStore";
 
 export const authService = {
   async loginWithIdToken(args: { idToken: string }): Promise<LoginResponse> {
     const { data } = await memberLoginByBody(args);
-    console.log("[LOGIN] request body:", args);
-    console.log("[LOGIN] response:", data);
 
     if (!data.accessToken) {
       throw new Error(

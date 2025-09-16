@@ -9,4 +9,13 @@ export type AuthMember = {
   alarmMajorNotice: boolean;
   alarmEmploymentNotice: boolean;
 };
-export interface RoleType {}
+export type LoginBody = {
+  idToken: string;
+};
+
+export type LoginResponse = {
+  accessToken: string;
+  refreshToken: string;
+  accessTokenExpiresAt: number;
+  refreshTokenExpiresAt: number;
+};

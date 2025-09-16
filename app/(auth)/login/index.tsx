@@ -56,9 +56,7 @@ export default function Login() {
       console.log("✅ [AUTH] ID TOKEN:", idToken.slice(0, 32) + "...");
       console.log("[AUTH] before call");
       await authService.loginWithIdToken({ idToken }); // 2. 로그인 성공 후, 사용자 정보를 조회합니다.
-      console.log("[MEMBER] 사용자 정보 조회 시도");
       const memberResponse = await getMemberData();
-      // API 응답 구조에 따라 'name' 또는 'username' 등 실제 필드명으로 수정해야 합니다.
       const userName = memberResponse.data.name;
       console.log(`[MEMBER] 사용자 이름: ${userName}`); // 3. 조회된 사용자 이름을 params로 담아 다음 화면으로 전달합니다.
 
