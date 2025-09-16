@@ -1,10 +1,11 @@
 import { Image } from "expo-image";
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
 import { Text, View } from "react-native";
 import RadioGroup, { RadioButtonProps } from "react-native-radio-buttons-group";
 
 export default function LoginFirst() {
+  const { name } = useLocalSearchParams();
   const radioButtons: RadioButtonProps[] = [
     {
       id: "1",
@@ -46,7 +47,9 @@ export default function LoginFirst() {
         style={{ width: 128, height: 128 }}
       />
       <View className="flex-col items-center justify-center gap-2 mb-8">
-        <Text className="text-text font-semibold">안녕하세요 ooo님!{"\n"}</Text>
+        <Text className="text-text font-semibold">
+          안녕하세요 {name}님!{"\n"}
+        </Text>
         <Text className="text-text font-semibold">
           Come&Check앱을 다운로드 해주셔서 감사합니다!{"\n"}
         </Text>
