@@ -1,7 +1,7 @@
 import { api } from "./client";
 import { DeveloperQuestion } from "./developerQuestion.type";
 
-export async function postQuestion(data: DeveloperQuestion) {
+export async function postQuestion(data: Pick<DeveloperQuestion, "content">) {
   const response = await api.post<DeveloperQuestion>(
     "/api/v1/developer/questions",
     data

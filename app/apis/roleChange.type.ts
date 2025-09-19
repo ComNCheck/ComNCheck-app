@@ -1,5 +1,5 @@
 // 등급신청 폼 api
-export interface roleChangeType {
+export interface RoleChangeType {
   name: string;
   studentNumber: number;
   major: string;

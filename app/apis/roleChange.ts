@@ -1,6 +1,6 @@
 import { api } from "./client";
-import { roleChangeType } from "./roleChange.type";
+import { RoleChangeType } from "./roleChange.type";
 
-export function applyRoleChange(data: roleChangeType) {
+export function applyRoleChange(data: RoleChangeType) {
   return api.post("/api/v1/role-change-requests", data);
 }

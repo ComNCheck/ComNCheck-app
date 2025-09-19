@@ -5,7 +5,7 @@ import ShadowBox from "@/components/ui/ShadowBox";
 import SettingView from "@/components/view/SettingView";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import { Text, View } from "react-native";
+import { ActivityIndicator, Text, View } from "react-native";
 import { getCouncilList } from "../apis/member";
 import { Member, President } from "../apis/member.type";
 
@@ -35,6 +35,15 @@ export default function ListScreen() {
     };
     fetchData();
   }, []);
+  if (isLoading) {
+    return (
+      <SettingView>
+        <View className="flex-1 justify-center items-center">
+          <ActivityIndicator size="large" color="#808080" />
+        </View>
+      </SettingView>
+    );
+  }
   return (
     <SettingView>
       <View className="flex-1 justify-around">
@@ -53,7 +62,7 @@ export default function ListScreen() {
               <View className="flex-1 flex-row flex-wrap justify-between border-[#FAFAFA] border-[2px] rounded-xl p-4">
                 {councilList?.map((item, index) => (
                   <View
-                    key={index}
+                    key={`${item.name}-${item.position}-${index}`}
                     style={{
                       width: "48%",
                       marginBottom: 8,

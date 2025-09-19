@@ -3,7 +3,7 @@ import AnswerCard from "@/components/ui/AnswerCard";
 import SettinglView from "@/components/view/SettingView";
 import { Entypo } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
-import { ScrollView, Text, TextInput, View } from "react-native";
+import { Alert, ScrollView, Text, TextInput, View } from "react-native";
 import { getAllQuestions, postQuestion } from "../apis/developerQuestion";
 import { DeveloperQuestion } from "../apis/developerQuestion.type";
 
@@ -32,7 +32,7 @@ export default function ToDeveloperScreen() {
     };
 
     fetchPreviousMessages();
-  }, [messages]);
+  }, []);
   const handleSubmit = async () => {
     if (messageInput.trim().length === 0) return;
 
@@ -44,6 +44,7 @@ export default function ToDeveloperScreen() {
       setMessageInput("");
     } catch (error) {
       console.error("메시지 전송 실패:", error);
+      Alert.alert("오류", "메시지 전송 중 문제가 발생했습니다.");
     }
   };
   return (

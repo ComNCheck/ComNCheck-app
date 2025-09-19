@@ -46,9 +46,15 @@ export default function ApplyRatingScreen() {
       return;
     }
 
+    const studentNumberParsed = parseInt(form.studentNumber, 10);
+    if (isNaN(studentNumberParsed)) {
+      Alert.alert("입력 오류", "학번은 숫자로만 입력해주세요.");
+      return;
+    }
+
     const formData = {
-      ...form, // form 객체를 그대로 사용
-      studentNumber: parseInt(form.studentNumber, 10),
+      ...form,
+      studentNumber: studentNumberParsed,
       requestRole: selectedRoleValue,
     };
 
@@ -92,7 +98,9 @@ export default function ApplyRatingScreen() {
             <Text className="text-lg font-black w-[20%]">학번</Text>
             <TextInput
               value={form.studentNumber}
-              onChangeText={(text) => handleFormChange("studentNumber", text)}
+              onChangeText={(text) =>
+                handleFormChange("studentNumber", text.replace(/[^0-9]/g, ""))
+              }
               placeholder="학번을 입력해주세요"
               keyboardType="number-pad"
               className="border-[#B6B6B6] border-[2px] rounded-lg p-4 flex-1"
