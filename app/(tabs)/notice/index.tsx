@@ -1,4 +1,4 @@
-import { getAnotherEvent } from "@/app/apis/notice";
+import { getAnotherEvent, getMajorEvent } from "@/app/apis/notice";
 import { NoticeType } from "@/app/apis/notice.type";
 import HeaderBar from "@/components/HeaderBar";
 import NoticeTitle from "@/components/title/NoticeTitle";
@@ -11,22 +11,29 @@ import { Text } from "react-native";
 
 const HomeScreen = () => {
   const router = useRouter();
-  const [notices, setNotices] = useState<NoticeType[]>([]);
+  const [majorNotices, setMajorNotices] = useState<NoticeType[]>([]);
+  const [anotherNotices, setAnotherNotices] = useState<NoticeType[]>([]);
+
   useEffect(() => {
-    let mounted = true;
+    let alive = true;
     (async () => {
       try {
-        const data = await getAnotherEvent();
-        if (mounted) setNotices(data);
-        console.log("과행사 공지:", data);
+        const [major, another] = await Promise.all([
+          getMajorEvent(),
+          getAnotherEvent(),
+        ]);
+        if (!alive) return;
+        setMajorNotices(major);
+        setAnotherNotices(another);
       } catch (e) {
-        console.log("과행사 공지 에러:", e);
+        console.log("공지 로드 에러:", e);
       }
     })();
     return () => {
-      mounted = false;
+      alive = false;
     };
   }, []);
+
   return (
     <ParallaxScrollView
       headerBar={
@@ -47,22 +54,35 @@ const HomeScreen = () => {
         description="개강총회에 참여하세요!"
         onPress={() => router.push("/(tabs)/notice/majorEvent/detail")}
       />
+      {majorNotices?.map((n) => (
+        <EventCard
+          key={n.id}
+          eventName={n.eventName}
+          dDay={n.date}
+          description={n.location}
+          onPress={() =>
+            router.push({
+              pathname: "/notice/[section]/detail/[id]" as const,
+              params: { section: "major-event", id: String(n.id) },
+            })
+          }
+        />
+      ))}
       <NoticeTitle
         title="타 주최 행사 확인하기"
         show="전체보기"
         onPress={() => router.push("/(tabs)/notice/[sections]/anotherEvent")}
       ></NoticeTitle>
-      {notices?.map((n) => (
-        <NoticeCard
+      {anotherNotices?.map((n) => (
+        <EventCard
           key={n.id}
-          title={n.eventName}
-          Date={n.date}
-          place={n.location}
+          eventName={n.eventName}
+          description={n.location}
           dDay={n.date}
           onPress={() =>
             router.push({
               pathname: "/notice/[section]/detail/[id]" as const,
-              params: { section: "anotherEvent", id: String(n.id) },
+              params: { section: "another-event", id: String(n.id) },
             })
           }
         />
