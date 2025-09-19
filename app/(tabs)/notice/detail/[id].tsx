@@ -12,8 +12,7 @@ import { Linking, Pressable, Text, View } from "react-native";
 export default function DetailEventScreen() {
   const router = useRouter();
 
-  const { hostCategory, id } = useLocalSearchParams<{
-    hostCategory: string;
+  const { id } = useLocalSearchParams<{
     id: string;
   }>();
   const idNum = Number(id);
@@ -32,7 +31,7 @@ export default function DetailEventScreen() {
     let mounted = true;
     (async () => {
       try {
-        const data = await getDetailMajorEvent(idNum, hostCategory);
+        const data = await getDetailMajorEvent(idNum);
         if (mounted) setNotice(data);
         console.log("과행사 공지:", data);
       } catch (e) {

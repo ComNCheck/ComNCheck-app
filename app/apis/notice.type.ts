@@ -15,12 +15,6 @@ export interface Time {
 export interface DetailNoticeType {
   //행사 상세 조회
   id: number;
-  eventName: string;
-  category: string;
-  startDate: string;
-  endDate: string;
-  time: string;
-  location: string;
   notice: string;
   googleFormLink: string;
   cardNewsImageUrls?: string[];

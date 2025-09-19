@@ -65,9 +65,7 @@ export default function MajorEventScreen() {
           place={n.location}
           dDay={calculateDDay(n.date)}
           onPress={() => {
-            router.push(
-              `/notice/detail/${n.id}?hostCategory=COMPUTER_SCIENCE` as Href
-            );
+            router.push(`/notice/detail/${n.id}` as Href);
           }}
         />
       ))}

@@ -81,9 +81,7 @@ const HomeScreen = () => {
             dDay={calculateDDay(n.date)}
             description={n.location}
             onPress={() => {
-              router.push(
-                `/notice/detail/${n.id}?hostCategory=COMPUTER_SCIENCE` as Href
-              );
+              router.push(`/notice/detail/${n.id}` as Href);
             }}
           />
         ))}
@@ -106,7 +104,7 @@ const HomeScreen = () => {
             description={n.location}
             dDay={calculateDDay(n.date)}
             onPress={() => {
-              router.push(`/notice/detail/${n.id}?hostCategory=ETC` as Href);
+              router.push(`/notice/detail/${n.id}` as Href);
             }}
           />
         ))}

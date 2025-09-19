@@ -64,7 +64,7 @@ export default function AnotherEventScreen() {
           place={n.location}
           dDay={calculateDDay(n.date)}
           onPress={() => {
-            router.push(`/notice/detail/${n.id}?hostCategory=ETC` as Href);
+            router.push(`/notice/detail/${n.id}` as Href);
           }}
         />
       ))}

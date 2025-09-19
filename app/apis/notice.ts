@@ -19,12 +19,10 @@ export async function getMajorEvent(
 
 export async function getDetailMajorEvent(
   //행사 상세 조회
-  majorEventId: number,
-  hostCategory: string
+  majorEventId: number
 ): Promise<DetailNoticeType> {
   const res = await api.get<DetailNoticeType>(
-    `/api/v1/major-event/${majorEventId}`,
-    { params: hostCategory ? { hostCategory } : undefined }
+    `/api/v1/major-event/${majorEventId}`
   );
   return res.data;
 }
