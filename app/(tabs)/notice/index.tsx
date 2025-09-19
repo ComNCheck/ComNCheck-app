@@ -19,6 +19,7 @@ const HomeScreen = () => {
   const [anotherEvents, setAnotherEvents] = useState<NoticeType[]>([]);
   const [majorNotices, setMajorNotices] = useState<Content[]>([]);
   const [employmentNotices, setEmploymentNotices] = useState<Content[]>([]);
+
   useEffect(() => {
     let alive = true;
     (async () => {
@@ -43,6 +44,17 @@ const HomeScreen = () => {
     };
   }, []);
 
+  const calculateDDay = (date: string) => {
+    const eventDate = new Date(date);
+    const today = new Date();
+    const diff = Math.ceil(
+      (eventDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)
+    );
+
+    if (diff === 0) return "D-day";
+    if (diff < 0) return "종료됨";
+    return `D-${diff}`;
+  };
   return (
     <ParallaxScrollView
       headerBar={
@@ -66,7 +78,7 @@ const HomeScreen = () => {
           <EventCard
             key={n.id}
             eventName={n.eventName}
-            dDay={n.date}
+            dDay={calculateDDay(n.date)}
             description={n.location}
             onPress={() => {
               router.push(
@@ -92,7 +104,7 @@ const HomeScreen = () => {
             key={n.id}
             eventName={n.eventName}
             description={n.location}
-            dDay={n.date}
+            dDay={calculateDDay(n.date)}
             onPress={() => {
               router.push(`/notice/detail/${n.id}?hostCategory=ETC` as Href);
             }}
