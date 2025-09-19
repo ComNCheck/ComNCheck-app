@@ -6,12 +6,8 @@ import {
   NoticeType,
 } from "./notice.type";
 
-export function DetailAnotherEvent(anotherEventId: number) {
-  //타 주최 행사 상세확인하기
-  return api.get<DetailNoticeType>(`/api/v1/another-event/${anotherEventId}`);
-}
-
 export async function getMajorEvent(
+  //행사 조회
   hostCategory: string
 ): Promise<NoticeType[]> {
   const params: Record<string, any> = {};
@@ -22,6 +18,7 @@ export async function getMajorEvent(
 }
 
 export async function getDetailMajorEvent(
+  //행사 상세 조회
   majorEventId: number,
   hostCategory: string
 ): Promise<DetailNoticeType> {
