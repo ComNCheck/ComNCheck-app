@@ -4,6 +4,7 @@ import {
   getMajorNotice,
 } from "@/app/apis/notice";
 import { Content, NoticeType } from "@/app/apis/notice.type";
+import { calculateDDay } from "@/app/utils/date";
 import HeaderBar from "@/components/HeaderBar";
 import NoticeTitle from "@/components/title/NoticeTitle";
 import EventCard from "@/components/ui/EventCard";
@@ -44,17 +45,6 @@ const HomeScreen = () => {
     };
   }, []);
 
-  const calculateDDay = (date: string) => {
-    const eventDate = new Date(date);
-    const today = new Date();
-    const diff = Math.ceil(
-      (eventDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)
-    );
-
-    if (diff === 0) return "D-day";
-    if (diff < 0) return "종료됨";
-    return `D-${diff}`;
-  };
   return (
     <ParallaxScrollView
       headerBar={

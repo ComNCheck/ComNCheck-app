@@ -11,7 +11,7 @@ export async function getMajorEvent(
   hostCategory: string
 ): Promise<NoticeType[]> {
   const params: Record<string, any> = {};
-  if (hostCategory !== undefined) params.hostCategory = hostCategory;
+  if (hostCategory) params.hostCategory = hostCategory;
 
   const res = await api.get<NoticeType[]>("/api/v1/major-event", { params });
   return res.data;
@@ -34,8 +34,8 @@ export async function getMajorNotice(): Promise<Content[]> {
 }
 export async function getMajorNoticePagination(
   //학부 공지사항 페이징
-  page: number = 1,
-  size: number = 10
+  page: number,
+  size: number
 ): Promise<majorNoticeList> {
   const res = await api.get<majorNoticeList>("/api/v1/major/notices/pages", {
     params: { page, size },
@@ -48,8 +48,8 @@ export async function getEmploymentNotice(): Promise<Content[]> {
   return res.data;
 }
 export async function getEmployNoticePagination(
-  page: number = 1,
-  size: number = 10
+  page: number,
+  size: number
 ): Promise<majorNoticeList> {
   const res = await api.get<majorNoticeList>(
     "/api/v1/employment/notices/pages",

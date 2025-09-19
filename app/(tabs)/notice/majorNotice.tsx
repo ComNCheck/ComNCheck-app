@@ -17,7 +17,7 @@ export default function MajorNoticeScreen() {
     let mounted = true;
     (async () => {
       try {
-        const page = 0;
+        const page = 1;
         const size = 8;
         const res = await getMajorNoticePagination(page, size);
         if (!mounted) return;

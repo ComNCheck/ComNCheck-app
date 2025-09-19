@@ -3,7 +3,7 @@ import {
   isSuccessResponse,
 } from "@react-native-google-signin/google-signin";
 import { Image } from "expo-image";
-import { useRouter } from "expo-router";
+import { Href, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import {
   Alert,
@@ -37,6 +37,7 @@ export default function Login() {
           showPlayServicesUpdateDialog: true,
         });
       }
+      //개발 중에 잠시 로그아웃 해제
       //await GoogleSignin.signOut();
       const result = await GoogleSignin.signIn();
       if (!isSuccessResponse(result)) {
@@ -62,10 +63,7 @@ export default function Login() {
       if (__DEV__) {
         console.log(`[MEMBER] 사용자 이름: ${userName}`);
       }
-      router.replace({
-        pathname: "/(auth)/login/first",
-        params: { name: userName },
-      });
+      router.replace(`/(auth)/login/first?name=${userName}` as Href);
     } catch (e: any) {
       if (__DEV__) {
         console.log("code:", e?.code, "message:", e?.message);

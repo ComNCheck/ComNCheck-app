@@ -7,7 +7,7 @@ import { Feather } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useMemo, useState } from "react";
-import { Linking, Pressable, Text, View } from "react-native";
+import { Alert, Linking, Pressable, Text, View } from "react-native";
 
 export default function DetailEventScreen() {
   const router = useRouter();
@@ -15,21 +15,24 @@ export default function DetailEventScreen() {
   const { id } = useLocalSearchParams<{
     id: string;
   }>();
-  const idNum = Number(id);
+
   const [notice, setNotice] = useState<DetailNoticeType>();
   const [hideImage, setHideImage] = useState(false);
 
   const imageUri = useMemo(() => {
-    const v = Array.isArray(notice?.cardNewsImageUrls)
-      ? notice?.cardNewsImageUrls.find(Boolean)
-      : notice?.cardNewsImageUrls;
-    const s = typeof v === "string" ? v.trim() : "";
-    return s || undefined;
+    const firstImage = notice?.cardNewsImageUrls?.find(Boolean);
+    return firstImage?.trim() || undefined;
   }, [notice?.cardNewsImageUrls]);
 
   useEffect(() => {
     let mounted = true;
     (async () => {
+      const idNum = Number(id);
+      if (Number.isNaN(idNum)) {
+        Alert.alert("잘못된 ID 형식입니다.");
+        router.back();
+        return;
+      }
       try {
         const data = await getDetailMajorEvent(idNum);
         if (mounted) setNotice(data);
@@ -41,7 +44,7 @@ export default function DetailEventScreen() {
     return () => {
       mounted = false;
     };
-  }, []);
+  }, [id, router]);
   const handleNext = async () => {
     const raw = notice?.googleFormLink?.trim();
     if (!raw) {
@@ -58,6 +61,7 @@ export default function DetailEventScreen() {
       await Linking.openURL(url);
     } catch (e) {
       console.log(e);
+      Alert.alert("링크를 여는 도중에 문제가 발생했어요.");
     }
   };
   return (

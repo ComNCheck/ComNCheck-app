@@ -17,7 +17,7 @@ export default function EmployNoticeScreen() {
     let mounted = true;
     (async () => {
       try {
-        const page = 0;
+        const page = 1;
         const size = 8;
         const res = await getEmployNoticePagination(page, size);
         if (!mounted) return;
