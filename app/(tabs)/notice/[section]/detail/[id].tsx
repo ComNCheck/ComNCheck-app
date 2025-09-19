@@ -3,11 +3,15 @@ import HeaderBar from "@/components/HeaderBar";
 import ParallaxScrollView from "@/components/view/ParallaxScrollView";
 import { Feather } from "@expo/vector-icons";
 import { Image } from "expo-image";
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { Pressable, Text, View } from "react-native";
 
 export default function DetailEventScreen() {
   const router = useRouter();
+  const { section, id } = useLocalSearchParams<{
+    section: string;
+    id: string;
+  }>();
   const handleNext = () => {
     router.back();
   };
