@@ -2,12 +2,14 @@ import CompleteButton from "@/components/button/CompleteBtn";
 import AnswerCard from "@/components/ui/AnswerCard";
 import SettinglView from "@/components/view/SettingView";
 import { Entypo } from "@expo/vector-icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ScrollView, Text, TextInput, View } from "react-native";
+import { getAllQuestions, postQuestion } from "../apis/developerQuestion";
+import { DeveloperQuestion } from "../apis/developerQuestion.type";
 
 export default function ToDeveloperScreen() {
   const [messageInput, setMessageInput] = useState<string>("");
-  const [messages, setMessages] = useState<string[]>([]);
+  const [messages, setMessages] = useState<DeveloperQuestion[]>([]);
   // const handlePlus = () => {
   //   console.log("메시지 추가");
   //   if (messageInput?.trim().length > 0) {
@@ -15,11 +17,33 @@ export default function ToDeveloperScreen() {
   //     setMessageInput("");
   //   }
   // };
-  const handleSubmit = () => {
-    console.log("메시지 제출");
-    if (messageInput?.trim().length > 0) {
-      setMessages([...messages, messageInput.trim()]);
+
+  useEffect(() => {
+    const fetchPreviousMessages = async () => {
+      try {
+        const messages = await getAllQuestions(); // 'messages'는 바로 배열
+        console.log("[GET /my] normalized:", messages);
+        if (Array.isArray(messages)) {
+          setMessages(messages);
+        }
+      } catch (error) {
+        console.error("이전 메시지를 불러오는 데 실패했습니다:", error);
+      }
+    };
+
+    fetchPreviousMessages();
+  }, [messages]);
+  const handleSubmit = async () => {
+    if (messageInput.trim().length === 0) return;
+
+    const newMessageContent = messageInput.trim();
+
+    try {
+      const newQuestion = await postQuestion({ content: newMessageContent });
+      setMessages((prevMessages) => [...prevMessages, newQuestion]);
       setMessageInput("");
+    } catch (error) {
+      console.error("메시지 전송 실패:", error);
     }
   };
   return (
@@ -59,8 +83,8 @@ export default function ToDeveloperScreen() {
             onPress={handlePlus}
           /> */}
           <View className="gap-2">
-            {messages.map((msg, index) => (
-              <AnswerCard key={index} answer={msg} />
+            {messages.map((msg) => (
+              <AnswerCard key={msg.id} answer={msg.content} />
             ))}
           </View>
           <CompleteButton
