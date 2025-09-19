@@ -21,9 +21,15 @@ export async function getMajorEvent(
   return res.data;
 }
 
-export function DetailMajorEvent(majorEventId: number) {
-  //과행사 상세 확인하기
-  return api.get<DetailNoticeType>(`/api/v1/major-event/${majorEventId}`);
+export async function getDetailMajorEvent(
+  majorEventId: number,
+  hostCategory: string
+): Promise<DetailNoticeType> {
+  const res = await api.get<DetailNoticeType>(
+    `/api/v1/major-event/${majorEventId}`,
+    { params: hostCategory ? { hostCategory } : undefined }
+  );
+  return res.data;
 }
 
 export async function getMajorNotice(): Promise<Content[]> {

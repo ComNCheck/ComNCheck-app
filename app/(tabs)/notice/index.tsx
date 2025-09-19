@@ -55,9 +55,7 @@ const HomeScreen = () => {
       <NoticeTitle
         title="과행사 공지 확인하기"
         show="전체보기"
-        onPress={() =>
-          router.push("/(tabs)/notice/[section]/majorEvent" as Href)
-        }
+        onPress={() => router.push("/(tabs)/notice/majorEvent" as Href)}
       ></NoticeTitle>
       <ScrollView
         horizontal
@@ -71,10 +69,9 @@ const HomeScreen = () => {
             dDay={n.date}
             description={n.location}
             onPress={() => {
-              const section = "major-event";
-              const id = String(n.id);
-              const path = `/(tabs)/notice/${section}/detail/${id}` as Href;
-              router.push(path);
+              router.push(
+                `/notice/detail/${n.id}?hostCategory=COMPUTER_SCIENCE` as Href
+              );
             }}
           />
         ))}
@@ -83,9 +80,7 @@ const HomeScreen = () => {
       <NoticeTitle
         title="타 주최 행사 확인하기"
         show="전체보기"
-        onPress={() =>
-          router.push("/(tabs)/notice/[sections]/anotherEvent" as Href)
-        }
+        onPress={() => router.push("/(tabs)/notice/anotherEvent" as Href)}
       ></NoticeTitle>
       <ScrollView
         horizontal
@@ -99,10 +94,7 @@ const HomeScreen = () => {
             description={n.location}
             dDay={n.date}
             onPress={() => {
-              const section = "another-event";
-              const id = String(n.id);
-              const path = `/(tabs)/notice/${section}/detail/${id}` as Href;
-              router.push(path);
+              router.push(`/notice/detail/${n.id}?hostCategory=ETC` as Href);
             }}
           />
         ))}

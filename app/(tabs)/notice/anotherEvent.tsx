@@ -9,14 +9,14 @@ import { Href, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { Pressable, Text } from "react-native";
 
-export default function MajorEventScreen() {
+export default function AnotherEventScreen() {
   const router = useRouter();
   const [notices, setNotices] = useState<NoticeType[]>([]);
   useEffect(() => {
     let mounted = true;
     (async () => {
       try {
-        const data = await getMajorEvent("COMPUTER_SCIENCE");
+        const data = await getMajorEvent("ETC");
         if (mounted) setNotices(data);
         console.log("과행사 공지:", data);
       } catch (e) {
@@ -35,7 +35,6 @@ export default function MajorEventScreen() {
           left={
             <Pressable
               onPress={() => router.back()}
-              //onPress={() => router.push("/(tabs)/notice")}
               className="flex-row items-center"
             >
               <Entypo name="chevron-left" size={30} color="#3a3a3a" />
@@ -45,7 +44,7 @@ export default function MajorEventScreen() {
         />
       }
     >
-      <NoticeTitle title="과행사 공지 확인하기"></NoticeTitle>
+      <NoticeTitle title="타 주최 행사 확인하기"></NoticeTitle>
       {notices?.map((n) => (
         <NoticeCard
           key={n.id}
@@ -54,10 +53,7 @@ export default function MajorEventScreen() {
           place={n.location}
           dDay={n.date}
           onPress={() => {
-            const section = "major-event";
-            const id = String(n.id);
-            const path = `/(tabs)/notice/${section}/detail/${id}` as Href;
-            router.push(path);
+            router.push(`/notice/detail/${n.id}?hostCategory=ETC` as Href);
           }}
         />
       ))}

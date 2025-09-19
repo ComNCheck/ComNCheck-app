@@ -4,7 +4,6 @@ export interface NoticeType {
   date: string;
   time: Time;
   location: string;
-  firstImageUrl?: string;
 }
 export interface Time {
   hour: number;
