@@ -5,7 +5,7 @@ import NoticeTitle from "@/components/title/NoticeTitle";
 import NoticeCard from "@/components/ui/NoticeCard";
 import ParallaxScrollView from "@/components/view/ParallaxScrollView";
 import { Entypo } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
+import { Href, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { Pressable, Text } from "react-native";
 
@@ -53,12 +53,12 @@ export default function MajorEventScreen() {
           Date={n.date}
           place={n.location}
           dDay={n.date}
-          onPress={() =>
-            router.push({
-              pathname: "/notice/[section]/detail/[id]" as const,
-              params: { section: "majorEvent", id: String(n.id) },
-            })
-          }
+          onPress={() => {
+            const section = "major-event";
+            const id = String(n.id);
+            const path = `/(tabs)/notice/${section}/detail/${id}` as Href;
+            router.push(path);
+          }}
         />
       ))}
     </ParallaxScrollView>

@@ -10,7 +10,7 @@ import NoticeTitle from "@/components/title/NoticeTitle";
 import EventCard from "@/components/ui/EventCard";
 import NoticeCard from "@/components/ui/NoticeCard";
 import ParallaxScrollView from "@/components/view/ParallaxScrollView";
-import { useRouter } from "expo-router";
+import { Href, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { Linking, Text } from "react-native";
 
@@ -56,7 +56,9 @@ const HomeScreen = () => {
       <NoticeTitle
         title="과행사 공지 확인하기"
         show="전체보기"
-        onPress={() => router.push("/(tabs)/notice/[section]/majorEvent")}
+        onPress={() =>
+          router.push("/(tabs)/notice/[section]/majorEvent" as Href)
+        }
       ></NoticeTitle>
       <EventCard
         eventName="개강총회"
@@ -70,18 +72,20 @@ const HomeScreen = () => {
           eventName={n.eventName}
           dDay={n.date}
           description={n.location}
-          onPress={() =>
-            router.push({
-              pathname: "/notice/[section]/detail/[id]" as const,
-              params: { section: "major-event", id: String(n.id) },
-            })
-          }
+          onPress={() => {
+            const section = "major-event";
+            const id = String(n.id);
+            const path = `/(tabs)/notice/${section}/detail/${id}` as Href;
+            router.push(path);
+          }}
         />
       ))}
       <NoticeTitle
         title="타 주최 행사 확인하기"
         show="전체보기"
-        onPress={() => router.push("/(tabs)/notice/[sections]/anotherEvent")}
+        onPress={() =>
+          router.push("/(tabs)/notice/[sections]/anotherEvent" as Href)
+        }
       ></NoticeTitle>
       {anotherEvents?.map((n) => (
         <EventCard
@@ -89,18 +93,18 @@ const HomeScreen = () => {
           eventName={n.eventName}
           description={n.location}
           dDay={n.date}
-          onPress={() =>
-            router.push({
-              pathname: "/notice/[section]/detail/[id]" as const,
-              params: { section: "another-event", id: String(n.id) },
-            })
-          }
+          onPress={() => {
+            const section = "another-event";
+            const id = String(n.id);
+            const path = `/(tabs)/notice/${section}/detail/${id}` as Href;
+            router.push(path);
+          }}
         />
       ))}
       <NoticeTitle
         title="학부 공지 확인하기"
         show="전체보기"
-        onPress={() => router.push("/(tabs)/notice/majorNotice")}
+        onPress={() => router.push("/(tabs)/notice/majorNotice" as Href)}
       ></NoticeTitle>
       {majorNotices?.slice(0, 3).map((n) => (
         <NoticeCard
@@ -113,7 +117,7 @@ const HomeScreen = () => {
       <NoticeTitle
         title="취업정보 공지 확인하기"
         show="전체보기"
-        onPress={() => router.push("/(tabs)/notice/employNotice")}
+        onPress={() => router.push("/(tabs)/notice/employNotice" as Href)}
       ></NoticeTitle>
       {employmentNotices?.slice(0, 3).map((n) => (
         <NoticeCard
