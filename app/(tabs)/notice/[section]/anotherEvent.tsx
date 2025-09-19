@@ -1,4 +1,4 @@
-import { getAnotherEvent } from "@/app/apis/notice";
+import { getMajorEvent } from "@/app/apis/notice";
 import { NoticeType } from "@/app/apis/notice.type";
 import HeaderBar from "@/components/HeaderBar";
 import NoticeTitle from "@/components/title/NoticeTitle";
@@ -16,7 +16,7 @@ export default function AnotherEventScreen() {
     let mounted = true;
     (async () => {
       try {
-        const data = await getAnotherEvent();
+        const data = await getMajorEvent("ETC");
         if (mounted) setNotices(data);
         console.log("과행사 공지:", data);
       } catch (e) {

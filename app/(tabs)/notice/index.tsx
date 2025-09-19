@@ -1,5 +1,4 @@
 import {
-  getAnotherEvent,
   getEmploymentNotice,
   getMajorEvent,
   getMajorNotice,
@@ -25,8 +24,8 @@ const HomeScreen = () => {
     (async () => {
       try {
         const [major, another, majorN, employN] = await Promise.all([
-          getMajorEvent(),
-          getAnotherEvent(),
+          getMajorEvent("COMPUTER_SCIENCE"),
+          getMajorEvent("ETC"),
           getMajorNotice(),
           getEmploymentNotice(),
         ]);
@@ -93,7 +92,7 @@ const HomeScreen = () => {
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={{ gap: 8 }}
       >
-        {anotherEvents?.map((n) => (
+        {anotherEvents?.slice(0, 3).map((n) => (
           <EventCard
             key={n.id}
             eventName={n.eventName}

@@ -6,20 +6,18 @@ import {
   NoticeType,
 } from "./notice.type";
 
-export async function getAnotherEvent(): Promise<NoticeType[]> {
-  //타 주최 행사 확인하기
-  const res = await api.get<NoticeType[]>("/api/v1/another-event");
-  return res.data;
-}
-
 export function DetailAnotherEvent(anotherEventId: number) {
   //타 주최 행사 상세확인하기
   return api.get<DetailNoticeType>(`/api/v1/another-event/${anotherEventId}`);
 }
 
-export async function getMajorEvent(): Promise<NoticeType[]> {
-  //과행사 확인하기
-  const res = await api.get<NoticeType[]>("/api/v1/major-event");
+export async function getMajorEvent(
+  hostCategory: string
+): Promise<NoticeType[]> {
+  const params: Record<string, any> = {};
+  if (hostCategory !== undefined) params.hostCategory = hostCategory;
+
+  const res = await api.get<NoticeType[]>("/api/v1/major-event", { params });
   return res.data;
 }
 

@@ -16,7 +16,7 @@ export default function MajorEventScreen() {
     let mounted = true;
     (async () => {
       try {
-        const data = await getMajorEvent();
+        const data = await getMajorEvent("COMPUTER_SCIENCE");
         if (mounted) setNotices(data);
         console.log("과행사 공지:", data);
       } catch (e) {
