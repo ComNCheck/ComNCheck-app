@@ -1,5 +1,10 @@
-import { getAnotherEvent, getMajorEvent } from "@/app/apis/notice";
-import { NoticeType } from "@/app/apis/notice.type";
+import {
+  getAnotherEvent,
+  getEmploymentNotice,
+  getMajorEvent,
+  getMajorNotice,
+} from "@/app/apis/notice";
+import { Content, NoticeType } from "@/app/apis/notice.type";
 import HeaderBar from "@/components/HeaderBar";
 import NoticeTitle from "@/components/title/NoticeTitle";
 import EventCard from "@/components/ui/EventCard";
@@ -7,24 +12,29 @@ import NoticeCard from "@/components/ui/NoticeCard";
 import ParallaxScrollView from "@/components/view/ParallaxScrollView";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import { Text } from "react-native";
+import { Linking, Text } from "react-native";
 
 const HomeScreen = () => {
   const router = useRouter();
-  const [majorNotices, setMajorNotices] = useState<NoticeType[]>([]);
-  const [anotherNotices, setAnotherNotices] = useState<NoticeType[]>([]);
-
+  const [majorEvents, setMajorEvents] = useState<NoticeType[]>([]);
+  const [anotherEvents, setAnotherEvents] = useState<NoticeType[]>([]);
+  const [majorNotices, setMajorNotices] = useState<Content[]>([]);
+  const [employmentNotices, setEmploymentNotices] = useState<Content[]>([]);
   useEffect(() => {
     let alive = true;
     (async () => {
       try {
-        const [major, another] = await Promise.all([
+        const [major, another, majorN, employN] = await Promise.all([
           getMajorEvent(),
           getAnotherEvent(),
+          getMajorNotice(),
+          getEmploymentNotice(),
         ]);
         if (!alive) return;
-        setMajorNotices(major);
-        setAnotherNotices(another);
+        setMajorEvents(major);
+        setAnotherEvents(another);
+        setMajorNotices(majorN);
+        setEmploymentNotices(employN);
       } catch (e) {
         console.log("공지 로드 에러:", e);
       }
@@ -54,7 +64,7 @@ const HomeScreen = () => {
         description="개강총회에 참여하세요!"
         onPress={() => router.push("/(tabs)/notice/majorEvent/detail")}
       />
-      {majorNotices?.map((n) => (
+      {majorEvents?.map((n) => (
         <EventCard
           key={n.id}
           eventName={n.eventName}
@@ -73,7 +83,7 @@ const HomeScreen = () => {
         show="전체보기"
         onPress={() => router.push("/(tabs)/notice/[sections]/anotherEvent")}
       ></NoticeTitle>
-      {anotherNotices?.map((n) => (
+      {anotherEvents?.map((n) => (
         <EventCard
           key={n.id}
           eventName={n.eventName}
@@ -92,16 +102,27 @@ const HomeScreen = () => {
         show="전체보기"
         onPress={() => router.push("/(tabs)/notice/majorNotice")}
       ></NoticeTitle>
-      <NoticeCard
-        title="2025 여름방학기간 학부사무실 운영시간 및 휴무안내"
-        Date="2025.07.03"
-        onPress={() => router.push("/(tabs)/notice")}
-      />
+      {majorNotices?.slice(0, 3).map((n) => (
+        <NoticeCard
+          key={n.notice_id}
+          title={n.title}
+          Date={n.date}
+          onPress={() => Linking.openURL(n.link)}
+        />
+      ))}
       <NoticeTitle
         title="취업정보 공지 확인하기"
         show="전체보기"
         onPress={() => router.push("/(tabs)/notice/employNotice")}
       ></NoticeTitle>
+      {employmentNotices?.slice(0, 3).map((n) => (
+        <NoticeCard
+          key={n.notice_id}
+          title={n.title}
+          Date={n.date}
+          onPress={() => Linking.openURL(n.link)}
+        />
+      ))}
     </ParallaxScrollView>
   );
 };

@@ -26,3 +26,17 @@ export interface DetailNoticeType {
   googleFormLink: string;
   cardNewsImageUrls?: string[];
 }
+export interface majorNoticeList {
+  //학부 공지사항,취업정보 목록 api
+  currentPage: number;
+  totalPages: number;
+  totalElements: number;
+  size: number;
+  content: Content[];
+}
+export interface Content {
+  title: string;
+  date: string;
+  link: string;
+  notice_id: number;
+}
