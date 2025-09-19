@@ -12,7 +12,7 @@ import NoticeCard from "@/components/ui/NoticeCard";
 import ParallaxScrollView from "@/components/view/ParallaxScrollView";
 import { Href, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import { Linking, Text } from "react-native";
+import { Linking, ScrollView, Text } from "react-native";
 
 const HomeScreen = () => {
   const router = useRouter();
@@ -60,26 +60,27 @@ const HomeScreen = () => {
           router.push("/(tabs)/notice/[section]/majorEvent" as Href)
         }
       ></NoticeTitle>
-      <EventCard
-        eventName="개강총회"
-        dDay="D-3"
-        description="개강총회에 참여하세요!"
-        onPress={() => router.push("/(tabs)/notice/majorEvent/detail")}
-      />
-      {majorEvents?.map((n) => (
-        <EventCard
-          key={n.id}
-          eventName={n.eventName}
-          dDay={n.date}
-          description={n.location}
-          onPress={() => {
-            const section = "major-event";
-            const id = String(n.id);
-            const path = `/(tabs)/notice/${section}/detail/${id}` as Href;
-            router.push(path);
-          }}
-        />
-      ))}
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={{ gap: 8 }}
+      >
+        {majorEvents?.slice(0, 3).map((n) => (
+          <EventCard
+            key={n.id}
+            eventName={n.eventName}
+            dDay={n.date}
+            description={n.location}
+            onPress={() => {
+              const section = "major-event";
+              const id = String(n.id);
+              const path = `/(tabs)/notice/${section}/detail/${id}` as Href;
+              router.push(path);
+            }}
+          />
+        ))}
+      </ScrollView>
+
       <NoticeTitle
         title="타 주최 행사 확인하기"
         show="전체보기"
@@ -87,20 +88,27 @@ const HomeScreen = () => {
           router.push("/(tabs)/notice/[sections]/anotherEvent" as Href)
         }
       ></NoticeTitle>
-      {anotherEvents?.map((n) => (
-        <EventCard
-          key={n.id}
-          eventName={n.eventName}
-          description={n.location}
-          dDay={n.date}
-          onPress={() => {
-            const section = "another-event";
-            const id = String(n.id);
-            const path = `/(tabs)/notice/${section}/detail/${id}` as Href;
-            router.push(path);
-          }}
-        />
-      ))}
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={{ gap: 8 }}
+      >
+        {anotherEvents?.map((n) => (
+          <EventCard
+            key={n.id}
+            eventName={n.eventName}
+            description={n.location}
+            dDay={n.date}
+            onPress={() => {
+              const section = "another-event";
+              const id = String(n.id);
+              const path = `/(tabs)/notice/${section}/detail/${id}` as Href;
+              router.push(path);
+            }}
+          />
+        ))}
+      </ScrollView>
+
       <NoticeTitle
         title="학부 공지 확인하기"
         show="전체보기"
