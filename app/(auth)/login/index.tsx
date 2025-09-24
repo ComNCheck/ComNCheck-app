@@ -22,16 +22,54 @@ export default function Login() {
   const [isLoading, setIsLoading] = useState(false);
 
   const WEB_CLIENT_ID = process.env.EXPO_PUBLIC_WEB_CLIENT_ID;
+  const IOS_CLIENT_ID = process.env.EXPO_PUBLIC_IOS_CLIENT_ID;
 
   useEffect(() => {
-    GoogleSignin.configure({
-      webClientId: WEB_CLIENT_ID,
-    });
-  }, [WEB_CLIENT_ID]);
+    const config: any = {};
+
+    if (Platform.OS === "ios") {
+      // iOS의 경우 iosClientId 사용
+      if (IOS_CLIENT_ID) {
+        config.iosClientId = IOS_CLIENT_ID;
+        console.log("✅ [AUTH] iOS Client ID 설정됨");
+      } else {
+        console.warn("⚠️ [AUTH] iOS_CLIENT_ID가 설정되지 않았습니다.");
+        return;
+      }
+    } else {
+      // Android/Web의 경우 webClientId 사용
+      if (WEB_CLIENT_ID) {
+        config.webClientId = WEB_CLIENT_ID;
+        console.log("✅ [AUTH] Web Client ID 설정됨");
+      } else {
+        console.warn("⚠️ [AUTH] WEB_CLIENT_ID가 설정되지 않았습니다.");
+        return;
+      }
+    }
+
+    GoogleSignin.configure(config);
+    console.log("✅ [AUTH] Google Sign-in configured for", Platform.OS, config);
+  }, [WEB_CLIENT_ID, IOS_CLIENT_ID]);
 
   const onPressGoogle = async () => {
     try {
       setIsLoading(true);
+
+      // 플랫폼별 클라이언트 ID 확인
+      if (Platform.OS === "ios" && !IOS_CLIENT_ID) {
+        Alert.alert(
+          "설정 오류",
+          "iOS Google 로그인을 위한 환경 변수가 설정되지 않았습니다."
+        );
+        return;
+      } else if (Platform.OS !== "ios" && !WEB_CLIENT_ID) {
+        Alert.alert(
+          "설정 오류",
+          "Google 로그인을 위한 환경 변수가 설정되지 않았습니다."
+        );
+        return;
+      }
+
       if (Platform.OS === "android") {
         await GoogleSignin.hasPlayServices({
           showPlayServicesUpdateDialog: true,

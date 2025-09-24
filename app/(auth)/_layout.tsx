@@ -1,15 +1,17 @@
 import { Stack } from "expo-router";
-import { View } from "react-native";
 import "react-native-reanimated";
 
 export default function AuthLayout() {
   return (
-    <View style={{ flex: 1 }}>
-      <Stack
-        screenOptions={{
-          headerShown: false,
-        }}
-      ></Stack>
-    </View>
+    <Stack
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
+      <Stack.Screen name="login/index" />
+      <Stack.Screen name="login/first" />
+      <Stack.Screen name="signup/index" />
+      <Stack.Screen name="signup/done" />
+    </Stack>
   );
 }
