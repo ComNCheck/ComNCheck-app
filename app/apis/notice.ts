@@ -1,0 +1,61 @@
+import { api } from "./client";
+import {
+  Content,
+  DetailNoticeType,
+  majorNoticeList,
+  NoticeType,
+} from "./notice.type";
+
+export async function getMajorEvent(
+  //행사 조회
+  hostCategory: string
+): Promise<NoticeType[]> {
+  const params: Record<string, any> = {};
+  if (hostCategory) params.hostCategory = hostCategory;
+
+  const res = await api.get<NoticeType[]>("/api/v1/major-event", { params });
+  return res.data;
+}
+
+export async function getDetailMajorEvent(
+  //행사 상세 조회
+  majorEventId: number
+): Promise<DetailNoticeType> {
+  const res = await api.get<DetailNoticeType>(
+    `/api/v1/major-event/${majorEventId}`
+  );
+  return res.data;
+}
+
+export async function getMajorNotice(): Promise<Content[]> {
+  //학부 공지사항
+  const res = await api.get<Content[]>("/api/v1/major/notices");
+  return res.data;
+}
+export async function getMajorNoticePagination(
+  //학부 공지사항 페이징
+  page: number,
+  size: number
+): Promise<majorNoticeList> {
+  const res = await api.get<majorNoticeList>("/api/v1/major/notices/pages", {
+    params: { page, size },
+  });
+  return res.data;
+}
+export async function getEmploymentNotice(): Promise<Content[]> {
+  //취업 공지사항
+  const res = await api.get<Content[]>("/api/v1/employment/notices");
+  return res.data;
+}
+export async function getEmployNoticePagination(
+  page: number,
+  size: number
+): Promise<majorNoticeList> {
+  const res = await api.get<majorNoticeList>(
+    "/api/v1/employment/notices/pages",
+    {
+      params: { page, size },
+    }
+  );
+  return res.data;
+}
