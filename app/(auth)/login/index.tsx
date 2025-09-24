@@ -95,27 +95,30 @@ export default function Login() {
         console.log("[AUTH] before call");
       }
 
-      console.log('🔄 [AUTH] 서버 로그인 시작...');
-      await authService.loginWithIdToken({ idToken });
-      console.log('✅ [AUTH] 서버 로그인 성공');
+      console.log("🔄 [AUTH] 서버 로그인 시작...");
+      console.log("🔍 [DEBUG] API Base URL:", process.env.EXPO_PUBLIC_API_BASE_URL);
+      console.log("🔍 [DEBUG] ID Token (first 50 chars):", idToken.substring(0, 50));
       
-      console.log('🔄 [AUTH] 사용자 정보 조회 시작...');
+      await authService.loginWithIdToken({ idToken });
+      console.log("✅ [AUTH] 서버 로그인 성공");
+
+      console.log("🔄 [AUTH] 사용자 정보 조회 시작...");
       const memberResponse = await getMemberData();
       const userName = memberResponse.data.name;
       console.log(`✅ [MEMBER] 사용자 이름: ${userName}`);
-      
+
       router.replace(`/(auth)/login/first?name=${userName}` as Href);
     } catch (e: any) {
       console.error("❌ [AUTH] 로그인 오류:", e);
-      
+
       let errorMessage = "구글 로그인 중 오류가 발생했습니다.";
-      
+
       if (e?.response) {
         // 서버 응답 오류
         const status = e.response.status;
         const data = e.response.data;
         console.error("❌ [AUTH] 서버 응답 오류:", status, data);
-        
+
         if (status === 404) {
           errorMessage = "서버에 연결할 수 없습니다. 관리자에게 문의하세요.";
         } else if (status === 401) {
@@ -126,16 +129,17 @@ export default function Login() {
       } else if (e?.request) {
         // 네트워크 오류
         console.error("❌ [AUTH] 네트워크 오류:", e.request);
-        errorMessage = "네트워크 연결을 확인해주세요. 인터넷 연결이 불안정할 수 있습니다.";
+        errorMessage =
+          "네트워크 연결을 확인해주세요. 인터넷 연결이 불안정할 수 있습니다.";
       } else if (e?.code) {
         // Google Sign-in 자체 오류
         console.error("❌ [AUTH] Google Sign-in 오류:", e.code, e.message);
-        if (e.code === 'SIGN_IN_CANCELLED') {
+        if (e.code === "SIGN_IN_CANCELLED") {
           return; // 사용자가 취소한 경우 알림 표시하지 않음
         }
         errorMessage = `Google 로그인 오류: ${e.message}`;
       }
-      
+
       Alert.alert("로그인 실패", errorMessage);
     } finally {
       setIsLoading(false);
