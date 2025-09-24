@@ -11,7 +11,7 @@ type Props = PropsWithChildren<{
   headerBackgroundColor?: { dark: string; light: string };
 }>;
 
-export default function SettinglView({ children }: Props) {
+export default function SettingView({ children }: Props) {
   const router = useRouter();
   return (
     <ThemedView className="flex-1">

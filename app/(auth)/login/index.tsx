@@ -37,7 +37,7 @@ export default function Login() {
           showPlayServicesUpdateDialog: true,
         });
       }
-      //개발 중에 잠시 로그아웃 해제
+
       //await GoogleSignin.signOut();
       const result = await GoogleSignin.signIn();
       if (!isSuccessResponse(result)) {
