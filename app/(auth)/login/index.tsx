@@ -139,13 +139,15 @@ export default function Login() {
           readyState: e.request.readyState,
           status: e.request.status,
           responseURL: e.request.responseURL,
-          timeout: e.request.timeout
+          timeout: e.request.timeout,
         });
-        
+
         if (e.request.status === 0) {
-          errorMessage = "서버에 연결할 수 없습니다. CORS 설정 또는 네트워크 연결을 확인해주세요.";
+          errorMessage =
+            "서버에 연결할 수 없습니다. CORS 설정 또는 네트워크 연결을 확인해주세요.";
         } else {
-          errorMessage = "네트워크 연결을 확인해주세요. 인터넷 연결이 불안정할 수 있습니다.";
+          errorMessage =
+            "네트워크 연결을 확인해주세요. 인터넷 연결이 불안정할 수 있습니다.";
         }
       } else if (e?.code) {
         // Google Sign-in 자체 오류
