@@ -96,9 +96,15 @@ export default function Login() {
       }
 
       console.log("🔄 [AUTH] 서버 로그인 시작...");
-      console.log("🔍 [DEBUG] API Base URL:", process.env.EXPO_PUBLIC_API_BASE_URL);
-      console.log("🔍 [DEBUG] ID Token (first 50 chars):", idToken.substring(0, 50));
-      
+      console.log(
+        "🔍 [DEBUG] API Base URL:",
+        process.env.EXPO_PUBLIC_API_BASE_URL
+      );
+      console.log(
+        "🔍 [DEBUG] ID Token (first 50 chars):",
+        idToken.substring(0, 50)
+      );
+
       await authService.loginWithIdToken({ idToken });
       console.log("✅ [AUTH] 서버 로그인 성공");
 
@@ -129,8 +135,18 @@ export default function Login() {
       } else if (e?.request) {
         // 네트워크 오류
         console.error("❌ [AUTH] 네트워크 오류:", e.request);
-        errorMessage =
-          "네트워크 연결을 확인해주세요. 인터넷 연결이 불안정할 수 있습니다.";
+        console.error("❌ [AUTH] 요청 상세 정보:", {
+          readyState: e.request.readyState,
+          status: e.request.status,
+          responseURL: e.request.responseURL,
+          timeout: e.request.timeout
+        });
+        
+        if (e.request.status === 0) {
+          errorMessage = "서버에 연결할 수 없습니다. CORS 설정 또는 네트워크 연결을 확인해주세요.";
+        } else {
+          errorMessage = "네트워크 연결을 확인해주세요. 인터넷 연결이 불안정할 수 있습니다.";
+        }
       } else if (e?.code) {
         // Google Sign-in 자체 오류
         console.error("❌ [AUTH] Google Sign-in 오류:", e.code, e.message);

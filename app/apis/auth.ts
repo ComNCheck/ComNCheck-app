@@ -7,8 +7,30 @@ export function memberLoginByBody(body: LoginBody) {
     idToken: body.idToken,
   };
 
+  console.log('🔍 [API] 로그인 요청 시작:', payload);
+  console.log('🔍 [API] Base URL:', api.defaults.baseURL);
+  
   return api.post<LoginResponse>("/api/v1/member/login", payload, {
-    headers: { "Content-Type": "application/json" },
+    headers: { 
+      "Content-Type": "application/json",
+      "Accept": "application/json",
+    },
+    timeout: 30000,
+  }).then(response => {
+    console.log('✅ [API] 로그인 응답 성공:', response.status);
+    return response;
+  }).catch(error => {
+    console.error('❌ [API] 로그인 요청 실패:', {
+      message: error.message,
+      status: error.response?.status,
+      data: error.response?.data,
+      config: {
+        url: error.config?.url,
+        method: error.config?.method,
+        baseURL: error.config?.baseURL
+      }
+    });
+    throw error;
   });
 }
 
