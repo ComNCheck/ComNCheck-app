@@ -37,7 +37,7 @@ export default function Login() {
           showPlayServicesUpdateDialog: true,
         });
       }
-      await GoogleSignin.signOut();
+      //await GoogleSignin.signOut();
       const result = await GoogleSignin.signIn();
       if (!isSuccessResponse(result)) {
         console.log("ℹ️ [AUTH] sign-in cancelled or no account selected");
