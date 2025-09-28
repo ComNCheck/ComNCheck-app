@@ -40,8 +40,17 @@ export default function ProposeEventScreen() {
       />
 
       <ScrollView
-        className="flex-1 px-5 pt-[100px]"
-        contentContainerStyle={{ paddingBottom: 120 }}
+        style={{
+          flex: 1,
+          paddingHorizontal: 20,
+          paddingTop: 100,
+        }}
+        contentContainerStyle={{
+          paddingBottom: 200,
+        }}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+        automaticallyAdjustKeyboardInsets={true}
       >
         <SubTitle
           title="내가 쓴 행사"

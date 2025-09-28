@@ -1,74 +1,80 @@
+import {
+  getMySuggestedEvents,
+  toggleEventLike,
+} from "@/app/apis/suggestedEvent";
+import { SuggestedEventResponseDTO } from "@/app/apis/suggestedEvent.type";
 import { TopItem } from "@/components/my/appliedEvent/types";
 import { useEffect, useState } from "react";
+
+// API 응답을 TopItem 형태로 변환하는 함수
+const convertToTopItem = (
+  event: SuggestedEventResponseDTO,
+  index: number
+): TopItem => ({
+  id: event.id.toString(),
+  rank: index + 1,
+  title: event.eventName,
+  subtitle: undefined,
+  description: event.description,
+  likes: event.likeCount,
+  liked: event.likedByCurrentUser,
+});
 
 export const useAppliedEvents = () => {
   const [items, setItems] = useState<TopItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    // TODO: replace with real API call
-    const mock: TopItem[] = [
-      {
-        id: "1",
-        rank: 1,
-        title: "짝선짝후",
-        subtitle: undefined,
-        description: "짝선짝후 ㄱㄱ",
-        likes: 3,
-        liked: false,
-      },
-      {
-        id: "2",
-        rank: 2,
-        title: "해커톤",
-        subtitle: undefined,
-        description:
-          "솔직히 하루는 너무 짧음. 일주일 정도로 제작되게 했으면 좋겠어요 그리고 간식같은것도 더 많이 많이 준비해주시고요",
-        likes: 3,
-        liked: true,
-      },
-      {
-        id: "3",
-        rank: 3,
-        title: "알고리즘 대회",
-        subtitle: undefined,
-        description: "알고리즘 대회 개최부탁",
-        likes: 3,
-        liked: true,
-      },
-      {
-        id: "4",
-        rank: 4,
-        title: "일주일 해커톤",
-        subtitle: undefined,
-        description: "일주일 해커톤 원해요",
-        likes: 3,
-        liked: false,
-      },
-      {
-        id: "5",
-        rank: 5,
-        title: "세미나",
-        subtitle: undefined,
-        description: "세미나 원해요 선배들(졸업o x 둘다o) ",
-        likes: 3,
-        liked: false,
-      },
-    ];
-
-    setItems(mock);
-    setLoading(false);
-  }, []);
-
-  const toggleLike = (id: string) => {
-    setItems((prev) =>
-      prev.map((it) =>
-        it.id === id
-          ? { ...it, liked: !it.liked, likes: it.likes + (it.liked ? -1 : 1) }
-          : it
-      )
-    );
+  const fetchMySuggestedEvents = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const response = await getMySuggestedEvents();
+      const convertedItems = response.content.map(convertToTopItem);
+      setItems(convertedItems);
+    } catch (err) {
+      console.error("Failed to fetch my suggested events:", err);
+      setError("행사 목록을 불러오는데 실패했습니다.");
+      // 에러 발생 시 빈 배열로 설정
+      setItems([]);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  return { items, setItems, toggleLike, loading };
+  useEffect(() => {
+    fetchMySuggestedEvents();
+  }, []);
+
+  const toggleLike = async (id: string) => {
+    try {
+      const eventId = parseInt(id);
+      const response = await toggleEventLike(eventId);
+
+      // 성공적으로 토글된 경우 로컬 상태 업데이트
+      setItems((prev) =>
+        prev.map((it) =>
+          it.id === id
+            ? {
+                ...it,
+                liked: response.liked,
+                likes: response.likeCount,
+              }
+            : it
+        )
+      );
+    } catch (err) {
+      console.error("Failed to toggle like:", err);
+      // 에러 발생 시 사용자에게 알림 (선택사항)
+    }
+  };
+
+  return {
+    items,
+    setItems,
+    toggleLike,
+    loading,
+    error,
+    refetch: fetchMySuggestedEvents,
+  };
 };
