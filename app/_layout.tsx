@@ -12,7 +12,7 @@ import "react-native-reanimated";
 
 import "@/global.css";
 import { useColorScheme } from "@/hooks/useColorScheme";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Text as RNText, TextInput as RNTextInput } from "react-native";
 interface DefaultPropsCompat {
   defaultProps?: any;
@@ -28,12 +28,13 @@ export default function RootLayout() {
     "Pretendard-Medium": require("../assets/fonts/Pretendard-Medium.ttf"),
     "Pretendard-SemiBold": require("../assets/fonts/Pretendard-SemiBold.ttf"),
   });
-  const [isReady, setIsReady] = useState(false); // <- 스플래시 표시 여부
 
   const Text = RNText as typeof RNText & DefaultPropsCompat;
   const TextInput = RNTextInput as typeof RNTextInput & DefaultPropsCompat;
+
   useEffect(() => {
     if (loaded) {
+      // 폰트 기본 스타일 설정
       if (Text.defaultProps == null) Text.defaultProps = {};
       Text.defaultProps.style = [
         { fontFamily: "Pretendard-Regular" },
@@ -44,26 +45,13 @@ export default function RootLayout() {
         { fontFamily: "Pretendard-Regular" },
         TextInput.defaultProps.style,
       ];
-      //SplashScreen.hideAsync();
-    }
-  }, [loaded, Text, TextInput]);
 
-  useEffect(() => {
-    if (loaded) {
-      const timer = setTimeout(() => {
-        setIsReady(true);
-        SplashScreen.hideAsync();
-      }, 2000); // 2초 동안 스플래시 유지
-
-      return () => clearTimeout(timer);
+      // 스플래시 화면 숨기기
+      SplashScreen.hideAsync();
     }
   }, [loaded]);
 
-  if (!isReady) {
-    return null; // 스플래시 유지 중 (React View 렌더링 X)
-  }
   if (!loaded) {
-    // Async font loading only occurs in development.
     return null;
   }
 
@@ -71,19 +59,17 @@ export default function RootLayout() {
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
       <GestureHandlerRootView style={{ flex: 1 }}>
         <Stack
-          initialRouteName="splash"
           screenOptions={{
+            headerShown: false,
             headerTitleStyle: { fontFamily: "Pretendard-Bold" },
             headerBackTitleStyle: { fontFamily: "Pretendard-Regular" },
           }}
         >
+          <Stack.Screen name="index" options={{ headerShown: false }} />
           <Stack.Screen name="splash" options={{ headerShown: false }} />
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="(auth)" options={{ headerShown: false }} />
           <Stack.Screen name="(setting)" options={{ headerShown: false }} />
-          <Stack.Screen name="(notice)" options={{ headerShown: false }} />
-          <Stack.Screen name="(my)" options={{ headerShown: false }} />
-          <Stack.Screen name="(qna)" options={{ headerShown: false }} />
           <Stack.Screen name="test" options={{ headerShown: false }} />
           <Stack.Screen name="+not-found" />
         </Stack>

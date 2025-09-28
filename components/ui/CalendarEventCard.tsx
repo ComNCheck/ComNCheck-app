@@ -1,8 +1,4 @@
-import {
-  getAnotherMajorEvent,
-  getMajorEvent,
-  majorEventItem,
-} from "@/mock/calendar/api";
+import { CalendarResponseDTO } from "@/app/apis/calendar.type";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
@@ -10,37 +6,32 @@ import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 
 interface EventCheckProps {
   selectedDate?: Date;
-  onSelectedEventsChange?: (events: majorEventItem[]) => void;
+  onSelectedEventsChange?: (events: CalendarResponseDTO[]) => void;
   showOnlySelected?: boolean;
+  events?: CalendarResponseDTO[]; // 외부에서 이벤트 데이터를 받을 수 있도록 추가
 }
 
 export default function CalendarEventCard({
   selectedDate,
   onSelectedEventsChange,
   showOnlySelected = false,
+  events: externalEvents,
 }: EventCheckProps) {
   const router = useRouter();
-  const [events, setEvents] = useState<majorEventItem[]>([]);
-  const [filteredEvents, setFilteredEvents] = useState<majorEventItem[]>([]);
-  const [selectedEvents, setSelectedEvents] = useState<majorEventItem[]>([]);
+  const [events, setEvents] = useState<CalendarResponseDTO[]>([]);
+  const [filteredEvents, setFilteredEvents] = useState<CalendarResponseDTO[]>(
+    []
+  );
+  const [selectedEvents, setSelectedEvents] = useState<CalendarResponseDTO[]>(
+    []
+  );
 
-  // 데이터 불러오기
+  // 외부에서 전달받은 이벤트 데이터 사용
   useEffect(() => {
-    const fetchEvents = async () => {
-      try {
-        const [majorEvents, anotherEvents] = await Promise.all([
-          getMajorEvent(),
-          getAnotherMajorEvent(),
-        ]);
-
-        const allEvents = [...(majorEvents || []), ...(anotherEvents || [])];
-        setEvents(allEvents);
-      } catch (e) {
-        console.error("행사 데이터 불러오기 실패", e);
-      }
-    };
-    fetchEvents();
-  }, []);
+    if (externalEvents) {
+      setEvents(externalEvents);
+    }
+  }, [externalEvents]);
 
   // 선택된 날짜에 해당하는 이벤트 필터링
   useEffect(() => {
@@ -95,21 +86,21 @@ export default function CalendarEventCard({
   };
 
   // 선택 해제
-  const handleDeselect = (eventToDeselect: majorEventItem) => {
+  const handleDeselect = (eventToDeselect: CalendarResponseDTO) => {
     setSelectedEvents((prev) =>
       prev.filter((event) => event.id !== eventToDeselect.id)
     );
   };
 
   // 선택된 이벤트인지 확인
-  const isEventSelected = (event: majorEventItem) => {
+  const isEventSelected = (event: CalendarResponseDTO) => {
     return selectedEvents.some(
       (selectedEvent) => selectedEvent.id === event.id
     );
   };
 
   // 이벤트 상세 페이지로 이동
-  const handleEventPress = (event: majorEventItem) => {
+  const handleEventPress = (event: CalendarResponseDTO) => {
     router.push(`/(tabs)/calendar/detail/${event.id}`);
   };
 
