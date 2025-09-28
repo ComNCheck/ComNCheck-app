@@ -27,6 +27,18 @@ export const createQuestion = async (
 };
 
 /**
+ * FAQ 특정 게시글 조회
+ */
+export const getQuestion = async (
+  majorQuestionId: number
+): Promise<QuestionResponseDTO> => {
+  const response = await api.get<QuestionResponseDTO>(
+    `/api/v1/major/questions/${majorQuestionId}`
+  );
+  return response.data;
+};
+
+/**
  * 내가 작성한 FAQ 게시글 목록 조회
  */
 export const getMyQuestions = async (): Promise<QuestionResponseDTO[]> => {

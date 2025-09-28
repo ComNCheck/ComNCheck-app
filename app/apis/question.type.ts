@@ -2,20 +2,27 @@
 
 export interface QuestionRequestDTO {
   title: string;
+  content: string;
   shared: boolean;
 }
 
-export interface QuestionResponseDTO {
-  id: number;
-  title: string;
-  shared: boolean;
+export interface AnswerResponseDTO {
+  answerId: number;
+  content: string;
+  majorQuestionId: number;
+  writerId: number;
   createdAt: string;
   updatedAt: string;
-  content?: string;
-  answer?: {
-    content: string;
-    createdAt: string;
-  };
+}
+
+export interface QuestionResponseDTO {
+  majorQuestionId: number;
+  title: string;
+  content: string;
+  createdAt: string;
+  updatedAt: string;
+  answer?: AnswerResponseDTO;
+  shared: boolean;
 }
 
 export interface QuestionListResponse {
