@@ -1,7 +1,9 @@
 import CompleteButton from "@/components/button/CompleteBtn";
 import HeaderBar from "@/components/HeaderBar";
 import SubTitle from "@/components/title/SubTitle";
+import BottomAbsolute from "@/components/ui/BottomAbsolute";
 import ShadowBox from "@/components/ui/ShadowBox";
+import { useBottomTabOverflow } from "@/components/ui/TabBarBackground";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import {
@@ -12,9 +14,13 @@ import {
   TextInput,
   View,
 } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function ProposeEventScreen() {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
+  const bottom = useBottomTabOverflow();
+  const floatingBottomOffset = bottom + insets.bottom + 12;
 
   const handleSubmit = () => {
     Alert.alert("신청하기", "제안이 접수되었습니다.");
@@ -46,7 +52,7 @@ export default function ProposeEventScreen() {
           paddingTop: 100,
         }}
         contentContainerStyle={{
-          paddingBottom: 200,
+          paddingBottom: 120,
         }}
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
@@ -90,9 +96,11 @@ export default function ProposeEventScreen() {
             />
           </ShadowBox>
         </View>
-
-        <CompleteButton content="신청하기" onPress={handleSubmit} />
       </ScrollView>
+
+      <BottomAbsolute bottom={floatingBottomOffset} className="px-4">
+        <CompleteButton content="신청하기" onPress={handleSubmit} />
+      </BottomAbsolute>
     </View>
   );
 }
