@@ -100,9 +100,11 @@ export default function MyWritingListDetail() {
           />
         </View>
         <Text className="text-base text-text mb-2">{question.title}</Text>
-        <Text className="text-sm text-gray-500 mb-2">
-          질문 내용: {question.content}
-        </Text>
+        {question.content && (
+          <Text className="text-sm text-gray-500 mb-2">
+            질문 내용: {question.content}
+          </Text>
+        )}
         <Text className="text-xs text-gray-400">
           작성일: {new Date(question.createdAt).toLocaleDateString("ko-KR")}
         </Text>

@@ -39,6 +39,20 @@ export const getQuestion = async (
 };
 
 /**
+ * FAQ 게시글 수정
+ */
+export const updateQuestion = async (
+  majorQuestionId: number,
+  questionData: QuestionRequestDTO
+): Promise<QuestionResponseDTO> => {
+  const response = await api.put<QuestionResponseDTO>(
+    `/api/v1/major/questions/${majorQuestionId}`,
+    questionData
+  );
+  return response.data;
+};
+
+/**
  * 내가 작성한 FAQ 게시글 목록 조회
  */
 export const getMyQuestions = async (): Promise<QuestionResponseDTO[]> => {

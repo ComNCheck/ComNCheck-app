@@ -15,7 +15,6 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function QuestionScreen() {
   const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
   const [isPublic, setIsPublic] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const insets = useSafeAreaInsets();
@@ -24,12 +23,7 @@ export default function QuestionScreen() {
 
   const handleSubmit = async () => {
     if (!title.trim()) {
-      Alert.alert("알림", "질문 제목을 입력해주세요.");
-      return;
-    }
-
-    if (!content.trim()) {
-      Alert.alert("알림", "질문 내용을 입력해주세요.");
+      Alert.alert("알림", "질문을 입력해주세요.");
       return;
     }
 
@@ -37,7 +31,6 @@ export default function QuestionScreen() {
       setIsLoading(true);
       await createQuestion({
         title: title.trim(),
-        content: content.trim(),
         shared: isPublic,
       });
 
@@ -82,9 +75,7 @@ export default function QuestionScreen() {
 
           <ShadowBox>
             <View className="flex-row items-center justify-between mb-3">
-              <Text className="text-xl font-semibold text-[#1b1b1b]">
-                질문 제목
-              </Text>
+              <Text className="text-xl font-semibold text-[#1b1b1b]">질문</Text>
               <AppSwitch
                 value={isPublic}
                 onValueChange={setIsPublic}
@@ -95,21 +86,10 @@ export default function QuestionScreen() {
             <TextInput
               value={title}
               onChangeText={setTitle}
-              placeholder="질문 제목을 입력해주세요"
-              className="text-base min-h-[50px] font-pretendard border border-gray-200 rounded-lg px-3 py-2 mb-4"
-            />
-
-            <Text className="text-xl font-semibold text-[#1b1b1b] mb-3">
-              질문 내용
-            </Text>
-            <TextInput
-              value={content}
-              onChangeText={setContent}
-              placeholder="질문 내용을 자세히 입력해주세요"
-              multiline={true}
-              numberOfLines={6}
+              placeholder="질문을 입력해주세요"
+              multiline
               textAlignVertical="top"
-              className="text-base min-h-[120px] font-pretendard border border-gray-200 rounded-lg px-3 py-2"
+              className="text-base min-h-[300px] font-pretendard border border-gray-200 rounded-lg px-3 py-2"
             />
           </ShadowBox>
 

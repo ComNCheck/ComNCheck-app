@@ -41,7 +41,7 @@ export default function MyWritingListScreen() {
         style: "destructive",
         onPress: () => {
           // TODO: 실제 삭제 API 호출
-          setItems((prev) => prev.filter((q) => q.id !== id));
+          setItems((prev) => prev.filter((q) => q.majorQuestionId !== id));
         },
       },
     ]);
@@ -82,13 +82,13 @@ export default function MyWritingListScreen() {
             const status = q.answer ? "answered" : "pending";
             return (
               <Swipeable
-                key={q.id}
+                key={q.majorQuestionId}
                 overshootRight={false}
                 containerStyle={{ overflow: "visible" }}
                 childrenContainerStyle={{ overflow: "visible" }}
                 renderRightActions={() => (
                   <Pressable
-                    onPress={() => handleDelete(q.id)}
+                    onPress={() => handleDelete(q.majorQuestionId)}
                     className="bg-red-500 h-full rounded-r-xl items-center justify-center w-10"
                   >
                     <FontAwesome name="trash" size={22} color="#ffffff" />
@@ -98,17 +98,24 @@ export default function MyWritingListScreen() {
                 <MyWritingListBOX
                   title={q.title}
                   status={status}
-                  createdAt={q.createdAt}
+                  createdAt={new Date(q.createdAt)
+                    .toLocaleDateString("ko-KR", {
+                      year: "numeric",
+                      month: "2-digit",
+                      day: "2-digit",
+                    })
+                    .replace(/\./g, ".")
+                    .replace(/\s/g, "")}
                   onPress={() => {
                     if (status === "answered") {
                       router.push({
                         pathname: "/(tabs)/my/writingCheck/MyWritingListDetail",
-                        params: { id: String(q.id) },
+                        params: { id: String(q.majorQuestionId) },
                       });
                     } else {
                       router.push({
                         pathname: "/(tabs)/my/writingCheck/MyWritingEdit",
-                        params: { id: String(q.id) },
+                        params: { id: String(q.majorQuestionId) },
                       });
                     }
                   }}

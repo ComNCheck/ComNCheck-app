@@ -2,7 +2,6 @@
 
 export interface QuestionRequestDTO {
   title: string;
-  content: string;
   shared: boolean;
 }
 
@@ -18,7 +17,7 @@ export interface AnswerResponseDTO {
 export interface QuestionResponseDTO {
   majorQuestionId: number;
   title: string;
-  content: string;
+  content?: string;
   createdAt: string;
   updatedAt: string;
   answer?: AnswerResponseDTO;
