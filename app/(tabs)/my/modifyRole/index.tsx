@@ -82,7 +82,10 @@ export default function ModifyRoleScreen() {
             key={item.id}
             item={item}
             onPress={() =>
-              router.push("/(tabs)/my/modifyRole/modifyRoleDetail")
+              router.push({
+                pathname: "/(tabs)/my/modifyRole/modifyRoleDetail",
+                params: { requestId: item.id },
+              })
             }
           />
         ))}
