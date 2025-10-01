@@ -10,7 +10,8 @@ import { Pressable, ScrollView, Text, View } from "react-native";
 
 export default function MyAppliedEventsScreen() {
   const router = useRouter();
-  const { items, toggleLike, loading, error, refetch } = useAppliedEvents();
+  const { items, toggleLike, loading, error, totalCount, refetch } =
+    useAppliedEvents();
   const [expandedId, setExpandedId] = React.useState<string | null>(null);
 
   return (
@@ -42,7 +43,7 @@ export default function MyAppliedEventsScreen() {
 
         <View className="mt-2 mb-3">
           <Text className="text-base font-semibold text-[#6B7280]">
-            전체 {items.length}개
+            전체 {totalCount}개
           </Text>
         </View>
 

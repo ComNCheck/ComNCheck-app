@@ -2,22 +2,25 @@ import CompleteButton from "@/components/button/CompleteBtn";
 import HeaderBar from "@/components/HeaderBar";
 import AppliedEventCard from "@/components/my/appliedEvent/AppliedEventCard";
 import SegmentedToggle from "@/components/ui/SegmentedToggle";
-import { useAppliedEvents } from "@/mock/my/useAppliedEvents";
+import { useSuggestedEvents } from "@/hooks/useSuggestedEvents";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Href, useRouter } from "expo-router";
-import { useMemo, useState } from "react";
-import { FlatList, Pressable, ScrollView, Text, View } from "react-native";
+import { useState } from "react";
+import {
+  ActivityIndicator,
+  FlatList,
+  Pressable,
+  ScrollView,
+  Text,
+  View,
+} from "react-native";
 
 export default function AppliedEventScreen() {
   const router = useRouter();
   const [tab, setTab] = useState<"all" | "top5">("top5");
-  const { items, toggleLike } = useAppliedEvents();
+  const { items, toggleLike, loading, totalCount, participantCount } =
+    useSuggestedEvents(tab);
   const [expandedId, setExpandedId] = useState<string | null>(null);
-
-  const displayItems = useMemo(() => {
-    if (tab === "top5") return items.slice(0, 5);
-    return items;
-  }, [items, tab]);
 
   const handleToggleLike = (id: string) => {
     toggleLike(id);
@@ -71,30 +74,36 @@ export default function AppliedEventScreen() {
         {tab === "top5" ? (
           <>
             <Text className="text-base font-semibold text-[#6B7280] mb-2">
-              총 348명 참여중
+              총 {participantCount}명 참여중
             </Text>
             <Text className="text-4xl font-semibold text-text mb-4">TOP 5</Text>
           </>
         ) : (
           <Text className="text-base font-semibold text-[#6B7280] mb-2">
-            전체 245개
+            전체 {totalCount}개
           </Text>
         )}
 
-        <FlatList
-          data={displayItems}
-          keyExtractor={(it) => it.id}
-          renderItem={({ item }) => (
-            <AppliedEventCard
-              item={item}
-              expanded={expandedId === item.id}
-              onToggleLike={handleToggleLike}
-              onToggleExpand={handlePressItem}
-              useEmojiForTopThree={tab === "top5"}
-            />
-          )}
-          scrollEnabled={false}
-        />
+        {loading ? (
+          <View className="py-10 items-center">
+            <ActivityIndicator size="large" color="#6B7280" />
+          </View>
+        ) : (
+          <FlatList
+            data={items}
+            keyExtractor={(it) => it.id}
+            renderItem={({ item }) => (
+              <AppliedEventCard
+                item={item}
+                expanded={expandedId === item.id}
+                onToggleLike={handleToggleLike}
+                onToggleExpand={handlePressItem}
+                useEmojiForTopThree={tab === "top5"}
+              />
+            )}
+            scrollEnabled={false}
+          />
+        )}
 
         <View className="h-6" />
         <CompleteButton
