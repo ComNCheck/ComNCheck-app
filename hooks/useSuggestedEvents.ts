@@ -1,3 +1,4 @@
+import { getMemberCount } from "@/app/apis/member";
 import {
   getAllSuggestedEvents,
   getTopSuggestedEvents,
@@ -38,12 +39,10 @@ export const useSuggestedEvents = (tab: "all" | "top5") => {
         const response = await getTopSuggestedEvents();
         const convertedItems = response.map(convertToTopItem);
         setItems(convertedItems);
-        // TOP 5의 경우 좋아요 수 합계를 참여자로 표시
-        const totalLikes = response.reduce(
-          (sum, event) => sum + event.likeCount,
-          0
-        );
-        setParticipantCount(totalLikes);
+
+        // 총 회원 수 조회
+        const memberCountData = await getMemberCount();
+        setParticipantCount(memberCountData.totalMemberCount);
       } else {
         // 전체 목록 조회 (좋아요 많은 순으로 정렬)
         const response = await getAllSuggestedEvents({
@@ -86,10 +85,7 @@ export const useSuggestedEvents = (tab: "all" | "top5") => {
         )
       );
 
-      // TOP 5의 경우 참여자 수도 업데이트
-      if (tab === "top5") {
-        setParticipantCount((prev) => (response.liked ? prev + 1 : prev - 1));
-      }
+      // 좋아요 토글 시 참여자 수는 변경하지 않음 (총 회원 수이므로)
     } catch (err) {
       console.error("Failed to toggle like:", err);
     }

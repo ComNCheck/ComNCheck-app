@@ -19,3 +19,8 @@ export enum StudentRole {
   STUDENT = "ROLE_STUDENT", // 일반 학생
   GRADUATE_STUDENT = "ROLE_GRADUATE_STUDENT", // 졸업생
 }
+
+// 총 회원 수 반환값
+export interface MemberCountResponse {
+  totalMemberCount: number;
+}
