@@ -61,3 +61,13 @@ export const getMyQuestions = async (): Promise<QuestionResponseDTO[]> => {
   );
   return response.data;
 };
+
+/**
+ * 모든 FAQ 게시글 목록 조회 (답변하기용)
+ */
+export const getAllQuestions = async (): Promise<QuestionResponseDTO[]> => {
+  const response = await api.get<QuestionResponseDTO[]>(
+    "/api/v1/major/questions/all"
+  );
+  return response.data;
+};

@@ -5,6 +5,17 @@ export interface QuestionRequestDTO {
   shared: boolean;
 }
 
+// 답변 관련 API 타입 정의
+
+export interface AnswerRequestDTO {
+  content: string;
+  majorQuestionId: number;
+}
+
+export interface AnswerUpdateRequestDTO {
+  content: string;
+}
+
 export interface AnswerResponseDTO {
   answerId: number;
   content: string;
