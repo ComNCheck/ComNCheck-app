@@ -12,6 +12,15 @@
       "bundleIdentifier": "com.comncheck.comncheckapp",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false,
+        "NSAppTransportSecurity": {
+          "NSAllowsArbitraryLoads": true,
+          "NSExceptionDomains": {
+            "r-cube.iptime.org": {
+              "NSExceptionAllowsInsecureHTTPLoads": true,
+              "NSExceptionMinimumTLSVersion": "1.0"
+            }
+          }
+        },
         "CFBundleURLTypes": [
           {
             "CFBundleURLSchemes": [

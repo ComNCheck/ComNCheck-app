@@ -32,7 +32,7 @@ export default function MyAppliedEventsScreen() {
       />
 
       <ScrollView
-        className="flex-1 px-5 pt-[140px]"
+        className="flex-1 px-5 pt-[100px]"
         contentContainerStyle={{ paddingBottom: 120 }}
       >
         <SubTitle

@@ -22,16 +22,54 @@ export default function Login() {
   const [isLoading, setIsLoading] = useState(false);
 
   const WEB_CLIENT_ID = process.env.EXPO_PUBLIC_WEB_CLIENT_ID;
+  const IOS_CLIENT_ID = process.env.EXPO_PUBLIC_IOS_CLIENT_ID;
 
   useEffect(() => {
-    GoogleSignin.configure({
-      webClientId: WEB_CLIENT_ID,
-    });
-  }, [WEB_CLIENT_ID]);
+    const config: any = {};
+
+    if (Platform.OS === "ios") {
+      // iOS의 경우 iosClientId 사용
+      if (IOS_CLIENT_ID) {
+        config.iosClientId = IOS_CLIENT_ID;
+        console.log("✅ [AUTH] iOS Client ID 설정됨");
+      } else {
+        console.warn("⚠️ [AUTH] iOS_CLIENT_ID가 설정되지 않았습니다.");
+        return;
+      }
+    } else {
+      // Android/Web의 경우 webClientId 사용
+      if (WEB_CLIENT_ID) {
+        config.webClientId = WEB_CLIENT_ID;
+        console.log("✅ [AUTH] Web Client ID 설정됨");
+      } else {
+        console.warn("⚠️ [AUTH] WEB_CLIENT_ID가 설정되지 않았습니다.");
+        return;
+      }
+    }
+
+    GoogleSignin.configure(config);
+    console.log("✅ [AUTH] Google Sign-in configured for", Platform.OS, config);
+  }, [WEB_CLIENT_ID, IOS_CLIENT_ID]);
 
   const onPressGoogle = async () => {
     try {
       setIsLoading(true);
+
+      // 플랫폼별 클라이언트 ID 확인
+      if (Platform.OS === "ios" && !IOS_CLIENT_ID) {
+        Alert.alert(
+          "설정 오류",
+          "iOS Google 로그인을 위한 환경 변수가 설정되지 않았습니다."
+        );
+        return;
+      } else if (Platform.OS !== "ios" && !WEB_CLIENT_ID) {
+        Alert.alert(
+          "설정 오류",
+          "Google 로그인을 위한 환경 변수가 설정되지 않았습니다."
+        );
+        return;
+      }
+
       if (Platform.OS === "android") {
         await GoogleSignin.hasPlayServices({
           showPlayServicesUpdateDialog: true,
@@ -57,21 +95,70 @@ export default function Login() {
         console.log("[AUTH] before call");
       }
 
+      console.log("🔄 [AUTH] 서버 로그인 시작...");
+      console.log(
+        "🔍 [DEBUG] API Base URL:",
+        process.env.EXPO_PUBLIC_API_BASE_URL
+      );
+      console.log(
+        "🔍 [DEBUG] ID Token (first 50 chars):",
+        idToken.substring(0, 50)
+      );
+
       await authService.loginWithIdToken({ idToken });
+      console.log("✅ [AUTH] 서버 로그인 성공");
+
+      console.log("🔄 [AUTH] 사용자 정보 조회 시작...");
       const memberResponse = await getMemberData();
       const userName = memberResponse.data.name;
-      if (__DEV__) {
-        console.log(`[MEMBER] 사용자 이름: ${userName}`);
-      }
+      console.log(`✅ [MEMBER] 사용자 이름: ${userName}`);
+
       router.replace(`/(auth)/login/first?name=${userName}` as Href);
     } catch (e: any) {
-      if (__DEV__) {
-        console.log("code:", e?.code, "message:", e?.message);
+      console.error("❌ [AUTH] 로그인 오류:", e);
+
+      let errorMessage = "구글 로그인 중 오류가 발생했습니다.";
+
+      if (e?.response) {
+        // 서버 응답 오류
+        const status = e.response.status;
+        const data = e.response.data;
+        console.error("❌ [AUTH] 서버 응답 오류:", status, data);
+
+        if (status === 404) {
+          errorMessage = "서버에 연결할 수 없습니다. 관리자에게 문의하세요.";
+        } else if (status === 401) {
+          errorMessage = "인증에 실패했습니다. 다시 시도해주세요.";
+        } else {
+          errorMessage = `서버 오류 (${status}): ${data?.message || "알 수 없는 오류"}`;
+        }
+      } else if (e?.request) {
+        // 네트워크 오류
+        console.error("❌ [AUTH] 네트워크 오류:", e.request);
+        console.error("❌ [AUTH] 요청 상세 정보:", {
+          readyState: e.request.readyState,
+          status: e.request.status,
+          responseURL: e.request.responseURL,
+          timeout: e.request.timeout,
+        });
+
+        if (e.request.status === 0) {
+          errorMessage =
+            "서버에 연결할 수 없습니다. CORS 설정 또는 네트워크 연결을 확인해주세요.";
+        } else {
+          errorMessage =
+            "네트워크 연결을 확인해주세요. 인터넷 연결이 불안정할 수 있습니다.";
+        }
+      } else if (e?.code) {
+        // Google Sign-in 자체 오류
+        console.error("❌ [AUTH] Google Sign-in 오류:", e.code, e.message);
+        if (e.code === "SIGN_IN_CANCELLED") {
+          return; // 사용자가 취소한 경우 알림 표시하지 않음
+        }
+        errorMessage = `Google 로그인 오류: ${e.message}`;
       }
-      Alert.alert(
-        "로그인 실패",
-        e?.message || "구글 로그인 중 오류가 발생했습니다."
-      );
+
+      Alert.alert("로그인 실패", errorMessage);
     } finally {
       setIsLoading(false);
     }
