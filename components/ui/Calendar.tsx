@@ -13,6 +13,7 @@ interface CalendarProps {
   onSelect?: (date: Date | undefined) => void;
   style?: ViewStyle;
   month?: Date;
+  onMonthChange?: (month: Date) => void;
   modifiers?: Record<string, (date: Date) => boolean>;
   modifiersClassNames?: Record<string, string>;
 }
@@ -24,6 +25,7 @@ export function Calendar({
   onSelect,
   style,
   month,
+  onMonthChange,
   modifiers,
   modifiersClassNames,
 }: CalendarProps) {
@@ -39,6 +41,7 @@ export function Calendar({
     setViewMonth((prev) => {
       const newMonth = new Date(prev);
       newMonth.setMonth(prev.getMonth() + diff);
+      onMonthChange?.(newMonth);
       return newMonth;
     });
   };
@@ -125,10 +128,30 @@ export function Calendar({
               // modifiers 적용 (행사가 있는 날인지 확인)
               const hasEvent =
                 modifiers && modifiersClassNames
-                  ? Object.entries(modifiers).some(
-                      ([key, fn]) => fn(cell) && key === "event"
-                    )
+                  ? Object.entries(modifiers).some(([key, fn]) => {
+                      const result = fn(cell) && key === "event";
+                      if (result) {
+                        console.log(
+                          "행사가 있는 날 발견:",
+                          cell.toDateString(),
+                          "key:",
+                          key
+                        );
+                      }
+                      return result;
+                    })
                   : false;
+
+              // 디버깅: modifiers 상태 확인
+              if (cell.getDate() === 1) {
+                // 매월 1일마다 로그 출력
+                console.log("Calendar modifiers 상태:", {
+                  hasModifiers: !!modifiers,
+                  hasModifiersClassNames: !!modifiersClassNames,
+                  modifiersKeys: modifiers ? Object.keys(modifiers) : [],
+                  cellDate: cell.toDateString(),
+                });
+              }
 
               const isSelected =
                 date &&
