@@ -10,7 +10,8 @@ import { Pressable, ScrollView, Text, View } from "react-native";
 
 export default function MyAppliedEventsScreen() {
   const router = useRouter();
-  const { items, toggleLike } = useAppliedEvents();
+  const { items, toggleLike, loading, error, totalCount, refetch } =
+    useAppliedEvents();
   const [expandedId, setExpandedId] = React.useState<string | null>(null);
 
   return (
@@ -42,24 +43,48 @@ export default function MyAppliedEventsScreen() {
 
         <View className="mt-2 mb-3">
           <Text className="text-base font-semibold text-[#6B7280]">
-            전체 245개
+            전체 {totalCount}개
           </Text>
         </View>
 
-        <View>
-          {items.map((item) => (
-            <AppliedEventCard
-              key={item.id}
-              item={item}
-              expanded={expandedId === item.id}
-              onToggleLike={(id) => toggleLike(id)}
-              onToggleExpand={(id) =>
-                setExpandedId((prev) => (prev === id ? null : id))
-              }
-              useEmojiForTopThree={false}
-            />
-          ))}
-        </View>
+        {loading ? (
+          <View className="flex-1 justify-center items-center py-8">
+            <Text className="text-gray-500">로딩 중...</Text>
+          </View>
+        ) : error ? (
+          <View className="flex-1 justify-center items-center py-8">
+            <Text className="text-red-500 mb-4">{error}</Text>
+            <Pressable
+              onPress={refetch}
+              className="bg-blue-500 px-4 py-2 rounded-lg"
+            >
+              <Text className="text-white">다시 시도</Text>
+            </Pressable>
+          </View>
+        ) : (
+          <View>
+            {items.length === 0 ? (
+              <View className="flex-1 justify-center items-center py-8">
+                <Text className="text-gray-500">
+                  아직 제안한 행사가 없습니다.
+                </Text>
+              </View>
+            ) : (
+              items.map((item) => (
+                <AppliedEventCard
+                  key={item.id}
+                  item={item}
+                  expanded={expandedId === item.id}
+                  onToggleLike={(id) => toggleLike(id)}
+                  onToggleExpand={(id) =>
+                    setExpandedId((prev) => (prev === id ? null : id))
+                  }
+                  useEmojiForTopThree={false}
+                />
+              ))
+            )}
+          </View>
+        )}
 
         <View className="h-6" />
         <CompleteButton

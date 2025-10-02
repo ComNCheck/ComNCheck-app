@@ -1,3 +1,4 @@
+import { updateQuestion } from "@/app/apis/question";
 import HeaderBar from "@/components/HeaderBar";
 import CompleteButton from "@/components/button/CompleteBtn";
 import SubTitle from "@/components/title/SubTitle";
@@ -6,36 +7,107 @@ import BottomAbsolute from "@/components/ui/BottomAbsolute";
 import ShadowBox from "@/components/ui/ShadowBox";
 import { useBottomTabOverflow } from "@/components/ui/TabBarBackground";
 import ParallaxScrollView from "@/components/view/ParallaxScrollView";
-import { useMyQuestions } from "@/mock/my/useMyQuestions";
+import { useQuestion } from "@/hooks/useQuestion";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import { Alert, Text, TextInput, View } from "react-native";
+import { ActivityIndicator, Alert, Text, TextInput, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function MyWritingEdit() {
   const router = useRouter();
   const { id } = useLocalSearchParams<{ id: string }>();
+  const questionId = id ? parseInt(id, 10) : null;
+  const { question, loading, error } = useQuestion(questionId);
   const [content, setContent] = useState("");
   const [isPublic, setIsPublic] = useState(true);
-  const { questions } = useMyQuestions();
-  const item = questions.find((q) => String(q.id) === String(id));
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  useEffect(() => {
-    if (item) {
-      setContent(item.title);
-      setIsPublic(item.isPublic);
-    }
-  }, [item]);
   const insets = useSafeAreaInsets();
   const bottom = useBottomTabOverflow();
   const floatingBottomOffset = bottom + insets.bottom + 12;
 
-  const handleSubmit = () => {
-    // TODO: 실제 수정 API 연결
-    Alert.alert("알림", "질문이 수정되었습니다.", [
-      { text: "확인", onPress: () => router.push("/(tabs)/my/writingCheck") },
-    ]);
+  useEffect(() => {
+    if (question) {
+      setContent(question.title);
+      setIsPublic(question.shared);
+    }
+  }, [question]);
+
+  const handleSubmit = async () => {
+    if (!content.trim()) {
+      Alert.alert("알림", "질문을 입력해주세요.");
+      return;
+    }
+
+    if (!questionId) {
+      Alert.alert("오류", "질문을 찾을 수 없습니다.");
+      return;
+    }
+
+    try {
+      setIsSubmitting(true);
+      await updateQuestion(questionId, {
+        title: content.trim(),
+        shared: isPublic,
+      });
+
+      Alert.alert("알림", "질문이 수정되었습니다.", [
+        { text: "확인", onPress: () => router.push("/(tabs)/my/writingCheck") },
+      ]);
+    } catch (error) {
+      console.error("질문 수정 중 오류 발생:", error);
+      Alert.alert(
+        "오류",
+        "질문 수정 중 오류가 발생했습니다. 다시 시도해주세요."
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
+
+  if (loading) {
+    return (
+      <View className="flex-1">
+        <ParallaxScrollView
+          headerBar={
+            <HeaderBar
+              backgroundColor="#fafafa"
+              left={<Text className="text-3xl font-extrabold">MY</Text>}
+            />
+          }
+        >
+          <View className="flex-1 justify-center items-center py-20">
+            <ActivityIndicator size="large" color="#007AFF" />
+            <Text className="text-gray-500 mt-4">질문을 불러오는 중...</Text>
+          </View>
+        </ParallaxScrollView>
+      </View>
+    );
+  }
+
+  if (error || !question) {
+    return (
+      <View className="flex-1">
+        <ParallaxScrollView
+          headerBar={
+            <HeaderBar
+              backgroundColor="#fafafa"
+              left={<Text className="text-3xl font-extrabold">MY</Text>}
+            />
+          }
+        >
+          <View className="flex-1 justify-center items-center py-20">
+            <Text className="text-red-500 text-center">
+              오류가 발생했습니다
+            </Text>
+            <Text className="text-gray-500 text-center mt-2">
+              {error || "질문을 찾을 수 없습니다."}
+            </Text>
+          </View>
+        </ParallaxScrollView>
+      </View>
+    );
+  }
 
   return (
     <View className="flex-1">
@@ -44,7 +116,7 @@ export default function MyWritingEdit() {
           <HeaderBar
             backgroundColor="#fafafa"
             left={<Text className="text-3xl font-extrabold">MY</Text>}
-          ></HeaderBar>
+          />
         }
       >
         <View>
@@ -65,10 +137,10 @@ export default function MyWritingEdit() {
             <TextInput
               value={content}
               onChangeText={setContent}
-              placeholder="기간 내에 아직 행사 신청을 못했는데 지금도 신청 가능한가요?"
+              placeholder="질문을 입력해주세요"
               multiline
               textAlignVertical="top"
-              className="text-base min-h-[300px] font-pretendard"
+              className="text-base min-h-[300px] font-pretendard border border-gray-200 rounded-lg px-3 py-2"
             />
           </ShadowBox>
 
@@ -78,10 +150,11 @@ export default function MyWritingEdit() {
 
       <BottomAbsolute bottom={floatingBottomOffset} className="px-4">
         <CompleteButton
-          content="수정완료"
+          content={isSubmitting ? "수정중..." : "수정완료"}
           onPress={handleSubmit}
-          backgroundColor="#0077ff"
+          backgroundColor={isSubmitting ? "#9ca3af" : "#0077ff"}
           textColor="#ffffff"
+          disabled={isSubmitting}
         />
       </BottomAbsolute>
     </View>

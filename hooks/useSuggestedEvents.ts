@@ -1,5 +1,7 @@
+import { getMemberCount } from "@/app/apis/member";
 import {
-  getMySuggestedEvents,
+  getAllSuggestedEvents,
+  getTopSuggestedEvents,
   toggleEventLike,
 } from "@/app/apis/suggestedEvent";
 import { SuggestedEventResponseDTO } from "@/app/apis/suggestedEvent.type";
@@ -20,38 +22,50 @@ const convertToTopItem = (
   liked: event.likedByCurrentUser,
 });
 
-export const useAppliedEvents = () => {
+export const useSuggestedEvents = (tab: "all" | "top5") => {
   const [items, setItems] = useState<TopItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [totalCount, setTotalCount] = useState<number>(0);
+  const [participantCount, setParticipantCount] = useState<number>(0);
 
-  const fetchMySuggestedEvents = async () => {
+  const fetchSuggestedEvents = async () => {
     try {
       setLoading(true);
       setError(null);
-      const response = await getMySuggestedEvents({
-        page: 0,
-        size: 100,
-        sort: ["likeCount,desc"],
-      });
-      const convertedItems = response.content.map(convertToTopItem);
-      setItems(convertedItems);
-      setTotalCount(response.totalElements);
+
+      if (tab === "top5") {
+        // TOP 5 조회
+        const response = await getTopSuggestedEvents();
+        const convertedItems = response.map(convertToTopItem);
+        setItems(convertedItems);
+
+        // 총 회원 수 조회
+        const memberCountData = await getMemberCount();
+        setParticipantCount(memberCountData.totalMemberCount);
+      } else {
+        // 전체 목록 조회 (좋아요 많은 순으로 정렬)
+        const response = await getAllSuggestedEvents({
+          page: 0,
+          size: 100,
+          sort: ["likeCount,desc"],
+        });
+        const convertedItems = response.content.map(convertToTopItem);
+        setItems(convertedItems);
+        setTotalCount(response.totalElements);
+      }
     } catch (err) {
-      console.error("Failed to fetch my suggested events:", err);
+      console.error("Failed to fetch suggested events:", err);
       setError("행사 목록을 불러오는데 실패했습니다.");
-      // 에러 발생 시 빈 배열로 설정
       setItems([]);
-      setTotalCount(0);
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchMySuggestedEvents();
-  }, []);
+    fetchSuggestedEvents();
+  }, [tab]);
 
   const toggleLike = async (id: string) => {
     try {
@@ -70,19 +84,20 @@ export const useAppliedEvents = () => {
             : it
         )
       );
+
+      // 좋아요 토글 시 참여자 수는 변경하지 않음 (총 회원 수이므로)
     } catch (err) {
       console.error("Failed to toggle like:", err);
-      // 에러 발생 시 사용자에게 알림 (선택사항)
     }
   };
 
   return {
     items,
-    setItems,
     toggleLike,
     loading,
     error,
     totalCount,
-    refetch: fetchMySuggestedEvents,
+    participantCount,
+    refetch: fetchSuggestedEvents,
   };
 };

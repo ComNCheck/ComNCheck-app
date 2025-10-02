@@ -6,12 +6,12 @@ import axios from "axios";
 
 const baseURL = process.env.EXPO_PUBLIC_API_BASE_URL;
 
-export const api = axios.create({
+const api = axios.create({
   baseURL,
-  timeout: 30000, // 타임아웃 증가
-  headers: { 
+  timeout: 60000, // 타임아웃 60초로 증가
+  headers: {
     "Content-Type": "application/json",
-    "Accept": "application/json",
+    Accept: "application/json",
   },
 });
 
@@ -40,9 +40,34 @@ api.interceptors.request.use(async (config) => {
 
 // 응답 인터셉터: 401 처리 (필요 시 리프레시 로직 확장 가능)
 api.interceptors.response.use(
-  (res) => res,
+  (res) => {
+    if (__DEV__) {
+      console.log(
+        "[HTTP Response]",
+        res.config.method?.toUpperCase(),
+        res.config.url,
+        "status:",
+        res.status,
+        "data:",
+        res.data
+      );
+    }
+    return res;
+  },
   async (error) => {
     const status = error?.response?.status;
+
+    if (__DEV__) {
+      console.error(
+        "[HTTP Error]",
+        error.config?.method?.toUpperCase(),
+        error.config?.url,
+        "status:",
+        status,
+        "error:",
+        error.response?.data || error.message
+      );
+    }
 
     // 리프레시 토큰 플로우를 쓰려면 여기서 갱신 후 재시도 로직 추가
     if (status === 401) {
@@ -55,3 +80,5 @@ api.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
+export { api, api as client };

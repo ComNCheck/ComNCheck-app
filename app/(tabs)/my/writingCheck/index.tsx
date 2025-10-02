@@ -1,8 +1,9 @@
+import { getMyQuestions } from "@/app/apis/question";
+import { QuestionResponseDTO } from "@/app/apis/question.type";
 import HeaderBar from "@/components/HeaderBar";
 import MyWritingListBOX from "@/components/my/MyWritingListBOX";
 import SubTitle from "@/components/title/SubTitle";
 import ParallaxScrollView from "@/components/view/ParallaxScrollView";
-import { useMyQuestions } from "@/mock/my/useMyQuestions";
 import { FontAwesome } from "@expo/vector-icons";
 import { router } from "expo-router";
 import React from "react";
@@ -12,12 +13,25 @@ import { Swipeable } from "react-native-gesture-handler";
 // 상태 뱃지는 `MyWritingListBOX` 내부로 이동했습니다.
 
 export default function MyWritingListScreen() {
-  const { questions } = useMyQuestions();
-  const [items, setItems] = React.useState(questions);
+  const [items, setItems] = React.useState<QuestionResponseDTO[]>([]);
+  const [loading, setLoading] = React.useState<boolean>(true);
 
   React.useEffect(() => {
-    setItems(questions);
-  }, [questions]);
+    const fetchMyQuestions = async () => {
+      try {
+        setLoading(true);
+        const questions = await getMyQuestions();
+        setItems(questions);
+      } catch (error) {
+        console.error("내가 쓴 글 조회 중 오류 발생:", error);
+        Alert.alert("오류", "내가 쓴 글을 불러오는 중 오류가 발생했습니다.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchMyQuestions();
+  }, []);
 
   const handleDelete = (id: number) => {
     Alert.alert("삭제", "이 글을 삭제할까요?", [
@@ -25,7 +39,10 @@ export default function MyWritingListScreen() {
       {
         text: "삭제",
         style: "destructive",
-        onPress: () => setItems((prev) => prev.filter((q) => q.id !== id)),
+        onPress: () => {
+          // TODO: 실제 삭제 API 호출
+          setItems((prev) => prev.filter((q) => q.majorQuestionId !== id));
+        },
       },
     ]);
   };
@@ -54,41 +71,59 @@ export default function MyWritingListScreen() {
       />
 
       <View className="gap-3">
-        {items.map((q) => (
-          <Swipeable
-            key={q.id}
-            overshootRight={false}
-            containerStyle={{ overflow: "visible" }}
-            childrenContainerStyle={{ overflow: "visible" }}
-            renderRightActions={() => (
-              <Pressable
-                onPress={() => handleDelete(q.id)}
-                className="bg-red-500 h-full rounded-r-xl items-center justify-center w-10"
+        {loading ? (
+          <Text className="text-center text-gray-500 py-8">로딩 중...</Text>
+        ) : items.length === 0 ? (
+          <Text className="text-center text-gray-500 py-8">
+            작성한 글이 없습니다.
+          </Text>
+        ) : (
+          items.map((q) => {
+            const status = q.answer ? "answered" : "pending";
+            return (
+              <Swipeable
+                key={q.majorQuestionId}
+                overshootRight={false}
+                containerStyle={{ overflow: "visible" }}
+                childrenContainerStyle={{ overflow: "visible" }}
+                renderRightActions={() => (
+                  <Pressable
+                    onPress={() => handleDelete(q.majorQuestionId)}
+                    className="bg-red-500 h-full rounded-r-xl items-center justify-center w-10"
+                  >
+                    <FontAwesome name="trash" size={22} color="#ffffff" />
+                  </Pressable>
+                )}
               >
-                <FontAwesome name="trash" size={22} color="#ffffff" />
-              </Pressable>
-            )}
-          >
-            <MyWritingListBOX
-              title={q.title}
-              status={q.status}
-              createdAt={q.createdAt}
-              onPress={() => {
-                if (q.status === "answered") {
-                  router.push({
-                    pathname: "/(tabs)/my/writingCheck/MyWritingListDetail",
-                    params: { id: String(q.id) },
-                  });
-                } else {
-                  router.push({
-                    pathname: "/(tabs)/my/writingCheck/MyWritingEdit",
-                    params: { id: String(q.id) },
-                  });
-                }
-              }}
-            />
-          </Swipeable>
-        ))}
+                <MyWritingListBOX
+                  title={q.title}
+                  status={status}
+                  createdAt={new Date(q.createdAt)
+                    .toLocaleDateString("ko-KR", {
+                      year: "numeric",
+                      month: "2-digit",
+                      day: "2-digit",
+                    })
+                    .replace(/\./g, ".")
+                    .replace(/\s/g, "")}
+                  onPress={() => {
+                    if (status === "answered") {
+                      router.push({
+                        pathname: "/(tabs)/my/writingCheck/MyWritingListDetail",
+                        params: { id: String(q.majorQuestionId) },
+                      });
+                    } else {
+                      router.push({
+                        pathname: "/(tabs)/my/writingCheck/MyWritingEdit",
+                        params: { id: String(q.majorQuestionId) },
+                      });
+                    }
+                  }}
+                />
+              </Swipeable>
+            );
+          })
+        )}
       </View>
     </ParallaxScrollView>
   );
