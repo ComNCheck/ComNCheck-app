@@ -1,6 +1,6 @@
 import { useRouter } from "expo-router";
 import { useEffect } from "react";
-import { ActivityIndicator, Text, View } from "react-native";
+import { Text, View } from "react-native";
 
 const SplashScreen = () => {
   const router = useRouter();
@@ -17,10 +17,22 @@ const SplashScreen = () => {
   }, [router]);
 
   return (
-    <View className="flex-1 bg-white justify-center items-center">
-      <Text className="text-tint text-4xl font-bold mb-6">MyApp</Text>
-      <ActivityIndicator size="large" color="#0077FF" />
-      <Text className="text-gray-500 mt-4">Loading...</Text>
+    <View className="flex-1 bg-white items-center justify-center">
+      <View className="flex-row items-baseline justify-center">
+        <Text className="text-tint text-3xl font-bold">컴</Text>
+        <Text className="text-gray-500 text-3xl">퓨터공학부 학생이라면</Text>
+      </View>
+
+      <Text className="text-tint text-4xl font-bold my-2">&</Text>
+
+      <Text className="text-gray-500 text-3xl text-center">
+        놓치는 공지없이
+      </Text>
+
+      <View className="flex-row items-baseline justify-center">
+        <Text className="text-gray-500 text-3xl">빠르게</Text>
+        <Text className="text-tint text-3xl font-bold">체크</Text>
+      </View>
     </View>
   );
 };
