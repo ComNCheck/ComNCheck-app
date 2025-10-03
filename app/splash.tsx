@@ -18,21 +18,20 @@ const SplashScreen = () => {
 
   return (
     <View className="flex-1 bg-white items-center justify-center">
-      <View className="flex-row items-baseline justify-center">
-        <Text className="text-tint text-3xl font-bold">컴</Text>
-        <Text className="text-gray-500 text-3xl">퓨터공학부 학생이라면</Text>
-      </View>
+      <Text className="text-3xl">
+        <Text className="text-tint font-bold">컴</Text>
+        <Text className="text-gray-500">퓨터공학부 학생이라면</Text>
+      </Text>
 
       <Text className="text-tint text-4xl font-bold my-2">&</Text>
 
       <Text className="text-gray-500 text-3xl text-center">
         놓치는 공지없이
       </Text>
-
-      <View className="flex-row items-baseline justify-center">
-        <Text className="text-gray-500 text-3xl">빠르게</Text>
-        <Text className="text-tint text-3xl font-bold">체크</Text>
-      </View>
+      <Text className="text-3xl">
+        <Text className="text-gray-500">빠르게</Text>
+        <Text className="text-tint font-bold"> 체크</Text>
+      </Text>
     </View>
   );
 };
