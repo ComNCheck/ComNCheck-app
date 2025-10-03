@@ -1,3 +1,4 @@
+import { postStudentNumber } from "@/app/apis/auth";
 import HeaderBar from "@/components/HeaderBar";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { Image } from "expo-image";
@@ -18,7 +19,7 @@ export default function Signup() {
   const router = useRouter();
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
-
+  const [submitting, setSubmitting] = useState(false);
   const pickImage = async () => {
     // 권한 요청
     const permissionResult =
@@ -36,6 +37,26 @@ export default function Signup() {
 
     if (!result.canceled) {
       setSelectedImage(result.assets[0].uri);
+    }
+  };
+  const handleSubmit = async () => {
+    if (!selectedImage) {
+      Alert.alert("이미지 필요", "학생증 이미지를 선택해 주세요.");
+      return;
+    }
+    try {
+      setSubmitting(true);
+      const res = await postStudentNumber(selectedImage);
+      console.log("[UPLOAD ok]", res);
+
+      Alert.alert("완료", "학생증 이미지가 업로드되었습니다.", [
+        { text: "확인", onPress: () => router.push("/(auth)/signup/done") },
+      ]);
+    } catch (e) {
+      console.error("[UPLOAD error]", e);
+      Alert.alert("업로드 실패", "이미지 업로드 중 문제가 발생했습니다.");
+    } finally {
+      setSubmitting(false);
     }
   };
   return (
@@ -126,7 +147,8 @@ export default function Signup() {
 
         <TouchableOpacity
           style={[styles.button]}
-          onPress={() => router.push("/(auth)/signup/done")} //임시 라우팅
+          onPress={handleSubmit}
+          disabled={submitting}
         >
           <Text style={styles.font}>다음 단계로</Text>
         </TouchableOpacity>
