@@ -129,7 +129,7 @@ export default function ToDeveloperScreen() {
                 <View className="flex-row items-center gap-2">
                   <Entypo name="circle-with-plus" size={24} color="white" />
                   <Text className="font-bold text-lg text-white">
-                    메세지 전송하기
+                    메시지 전송하기
                   </Text>
                 </View>
               }
