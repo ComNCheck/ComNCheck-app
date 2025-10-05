@@ -1,4 +1,4 @@
-import { postStudentNumber } from "@/app/apis/auth";
+import { postStudentCard } from "@/app/apis/auth";
 import HeaderBar from "@/components/HeaderBar";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { Image } from "expo-image";
@@ -6,6 +6,7 @@ import * as ImagePicker from "expo-image-picker";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import {
+  ActivityIndicator,
   Alert,
   Modal,
   Pressable,
@@ -17,48 +18,50 @@ import {
 
 export default function Signup() {
   const router = useRouter();
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [imageUri, setImageUri] = useState<string | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+
   const pickImage = async () => {
-    // 권한 요청
-    const permissionResult =
-      await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (permissionResult.granted === false) {
+    const perm = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (!perm.granted) {
       Alert.alert("권한 필요", "사진 접근 권한이 필요합니다.");
       return;
     }
 
-    // 이미지 선택
     const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      mediaTypes: "images",
       quality: 1,
     });
 
     if (!result.canceled) {
-      setSelectedImage(result.assets[0].uri);
+      const asset = result.assets[0];
+      setImageUri(asset.uri);
+      __DEV__ && console.log("[PICK]", asset.uri, asset.mimeType ?? "");
     }
   };
+
   const handleSubmit = async () => {
-    if (!selectedImage) {
+    if (!imageUri) {
       Alert.alert("이미지 필요", "학생증 이미지를 선택해 주세요.");
       return;
     }
     try {
       setSubmitting(true);
-      const res = await postStudentNumber(selectedImage);
-      console.log("[UPLOAD ok]", res);
+      const res = await postStudentCard(imageUri);
+      __DEV__ && console.log("[UPLOAD ok]", res);
 
       Alert.alert("완료", "학생증 이미지가 업로드되었습니다.", [
-        { text: "확인", onPress: () => router.push("/(auth)/signup/done") },
+        { text: "확인", onPress: () => router.replace("/(auth)/signup/done") },
       ]);
-    } catch (e) {
-      console.error("[UPLOAD error]", e);
+    } catch (e: any) {
+      __DEV__ && console.log("[UPLOAD error]", e?.message ?? e);
       Alert.alert("업로드 실패", "이미지 업로드 중 문제가 발생했습니다.");
     } finally {
       setSubmitting(false);
     }
   };
+
   return (
     <View className="flex-1 bg-white">
       <View
@@ -77,12 +80,10 @@ export default function Signup() {
       >
         <HeaderBar
           left={
-            <>
-              <Image
-                source={require("@/assets/images/logo-2x.png")}
-                style={{ width: 48, height: 48 }}
-              />
-            </>
+            <Image
+              source={require("@/assets/images/logo-2x.png")}
+              style={{ width: 48, height: 48 }}
+            />
           }
         >
           <Pressable onPress={() => router.push("/(auth)/login")}>
@@ -90,13 +91,14 @@ export default function Signup() {
           </Pressable>
         </HeaderBar>
       </View>
+
       <View className="flex-1 flex-col bg-white p-4 items-center justify-center">
-        <Text className="font-bold text-2xl ">회원가입</Text>
+        <Text className="font-bold text-2xl">회원가입</Text>
+
         <View className="flex-row items-center gap-2 m-4">
           <Text className="text-base text-gray-800">
             한국외국어대학교 모바일 ID 화면을 캡쳐 후 업로드 해주세요
           </Text>
-
           <Pressable onPress={() => setModalVisible(true)}>
             <Ionicons
               name="information-circle-outline"
@@ -129,7 +131,8 @@ export default function Signup() {
             </Pressable>
           </Modal>
         </View>
-        {!selectedImage && (
+
+        {!imageUri && (
           <TouchableOpacity
             onPress={pickImage}
             className="w-[70%] h-60 border-[1px] border-[#D9D9D9] rounded-2xl items-center justify-center"
@@ -138,19 +141,25 @@ export default function Signup() {
           </TouchableOpacity>
         )}
 
-        {selectedImage && (
+        {imageUri && (
           <Image
-            source={{ uri: selectedImage }}
+            source={{ uri: imageUri }}
             style={{ width: 200, height: 240, marginTop: 10, borderRadius: 10 }}
           />
         )}
 
         <TouchableOpacity
-          style={[styles.button]}
+          style={[styles.button, submitting && { opacity: 0.6 }]}
           onPress={handleSubmit}
           disabled={submitting}
         >
-          <Text style={styles.font}>다음 단계로</Text>
+          {submitting ? (
+            <Text style={[styles.font, { marginLeft: 8 }]}>
+              <ActivityIndicator size="small" color="#fff" />
+            </Text>
+          ) : (
+            <Text style={styles.font}>다음 단계로</Text>
+          )}
         </TouchableOpacity>
       </View>
     </View>
@@ -165,9 +174,5 @@ const styles = StyleSheet.create({
     margin: 20,
     width: "80%",
   },
-  font: {
-    fontWeight: "bold",
-    color: "#ffffff",
-    textAlign: "center",
-  },
+  font: { fontWeight: "bold", color: "#ffffff", textAlign: "center" },
 });

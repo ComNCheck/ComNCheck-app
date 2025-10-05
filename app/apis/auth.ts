@@ -1,11 +1,7 @@
-import {
-  AuthMember,
-  LoginBody,
-  LoginResponse,
-  studentNumber,
-} from "./auth.type";
+import * as FileSystem from "expo-file-system";
+import { getAccessToken } from "../services/tokenStore";
+import { AuthMember, LoginBody, LoginResponse } from "./auth.type";
 import { api } from "./client";
-
 export function memberLoginByBody(body: LoginBody) {
   //id token으로 로그인
   const payload = {
@@ -46,25 +42,54 @@ export function getMemberData() {
   //본인 정보 조회
   return api.get<AuthMember>("/api/v1/member");
 }
-export async function postStudentNumber(uri: string) {
-  //학생증 이미지 제출
-  const filename = uri.split("/").pop() ?? "student-id.jpg";
-  const ext = filename.split(".").pop()?.toLowerCase();
-  const type =
+
+export async function postStudentCard(uri: string) {
+  //학생증 업로드
+  const token = await getAccessToken();
+  const baseURL = process.env.EXPO_PUBLIC_API_BASE_URL!;
+  const url = `${baseURL}/api/v1/member/student/number`;
+
+  const filename = uri.split("/").pop() || "student-id.jpg";
+  const ext = (filename.split(".").pop() || "").toLowerCase();
+  const mime =
     ext === "png"
       ? "image/png"
       : ext === "jpg" || ext === "jpeg"
         ? "image/jpeg"
-        : "image/*";
+        : "application/octet-stream";
 
-  const form = new FormData();
-  form.append("studentCardImage", { uri, name: filename, type } as any);
+  const res = await FileSystem.uploadAsync(url, uri, {
+    httpMethod: "POST",
+    uploadType: FileSystem.FileSystemUploadType.MULTIPART,
+    fieldName: "studentCardImage", // 서버 필드명과 일치
+    mimeType: mime,
+    headers: {
+      Accept: "application/json",
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+    parameters: {}, // 다른 폼필드 필요하면 추가
+  });
 
-  // Authorization 헤더는 api 인터셉터가 자동으로 붙습니다.
-  const { data } = await api.post<studentNumber>(
-    "/api/v1/member/student/number",
-    form,
-    { headers: { "Content-Type": "multipart/form-data" } }
-  );
-  return data;
+  if (__DEV__)
+    console.log(
+      "[UPLOAD FS]",
+      res.status,
+      res.headers,
+      res.body?.slice(0, 120)
+    );
+
+  if (res.status >= 300) {
+    // HTML/리다이렉트 응답 방어
+    if (
+      (
+        res.headers?.["Content-Type"] ||
+        res.headers?.["content-type"] ||
+        ""
+      ).includes("text/html")
+    ) {
+      throw new Error("로그인이 필요합니다(HTML 응답).");
+    }
+    throw new Error(`업로드 실패: ${res.status}`);
+  }
+  return res.body ? JSON.parse(res.body) : null;
 }

@@ -20,6 +20,6 @@ export type LoginResponse = {
   refreshTokenExpiresAt: number;
 };
 
-export type studentNumber = {
+export type StudentNumber = {
   studentCardImage: string;
 };

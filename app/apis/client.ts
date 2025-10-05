@@ -10,7 +10,7 @@ const api = axios.create({
   baseURL,
   timeout: 60000, // 타임아웃 60초로 증가
   headers: {
-    "Content-Type": "application/json",
+    //"Content-Type": "application/json",
     Accept: "application/json",
   },
 });
@@ -21,7 +21,9 @@ api.interceptors.request.use(async (config) => {
   const absoluteUrl = config.baseURL
     ? new URL(config.url ?? "", config.baseURL).toString()
     : (config.url ?? "");
-
+  if (config.data instanceof FormData) {
+    delete (config.headers as any)?.["Content-Type"]; // axios가 자동 세팅
+  }
   if (__DEV__) {
     console.log(
       "[HTTP]",
