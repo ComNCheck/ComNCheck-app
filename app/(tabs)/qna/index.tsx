@@ -66,7 +66,7 @@ export default function QnATab() {
         <View>
           <SubTitle
             title="컴퓨터공학부 QnA"
-            description="답변 완료된 질문들이에요.\n 질문을 눌러 답변을 확인해보세요! "
+            description="답변 완료된 질문들이에요.\n질문을 눌러 답변을 확인해보세요! "
           />
           <View className="gap-3">
             {questions.length === 0 ? (
