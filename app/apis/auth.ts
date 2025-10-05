@@ -46,17 +46,20 @@ export function getMemberData() {
 export async function postStudentCard(uri: string) {
   //학생증 업로드
   const token = await getAccessToken();
-  const baseURL = process.env.EXPO_PUBLIC_API_BASE_URL!;
+  const baseURL = process.env.EXPO_PUBLIC_API_BASE_URL;
+  if (!baseURL) {
+    throw new Error("API base URL is not configured. Check your .env file.");
+  }
   const url = `${baseURL}/api/v1/member/student/number`;
 
   const filename = uri.split("/").pop() || "student-id.jpg";
   const ext = (filename.split(".").pop() || "").toLowerCase();
-  const mime =
-    ext === "png"
-      ? "image/png"
-      : ext === "jpg" || ext === "jpeg"
-        ? "image/jpeg"
-        : "application/octet-stream";
+  const mimeTypes: Record<string, string> = {
+    png: "image/png",
+    jpg: "image/jpeg",
+    jpeg: "image/jpeg",
+  };
+  const mime = mimeTypes[ext] || "application/octet-stream";
 
   const res = await FileSystem.uploadAsync(url, uri, {
     httpMethod: "POST",

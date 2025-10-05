@@ -113,8 +113,9 @@ export default function Login() {
       const userName = memberResponse.data.name;
       if (memberResponse?.data.checkStudentCard === true) {
         router.replace("/(tabs)/notice");
+      } else {
+        router.replace(`/(auth)/login/first?name=${userName}` as Href);
       }
-      router.replace(`/(auth)/login/first?name=${userName}` as Href);
     } catch (e: any) {
       console.error("❌ [AUTH] 로그인 오류:", e);
 

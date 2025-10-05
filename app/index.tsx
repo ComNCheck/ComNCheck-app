@@ -16,10 +16,10 @@ export default function RootIndex() {
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "#0077ff",
+        backgroundColor: "#ffffff",
       }}
     >
-      <ActivityIndicator size="large" color="#ffffff" />
+      <ActivityIndicator size="large" color="#0077ff" />
     </View>
   );
 }
