@@ -1,4 +1,5 @@
-import { memberLoginByBody } from "@/app/apis/auth";
+import { memberLoginByBody, memberLogout } from "@/app/apis/auth";
+import { router } from "expo-router";
 import { LoginResponse } from "../apis/auth.type";
 import { clearTokens, setTokens } from "./tokenStore";
 
@@ -19,6 +20,12 @@ export const authService = {
   },
 
   async logout() {
+    try {
+      await memberLogout();
+    } catch (error) {
+      console.error("로그아웃 중 에러 발생:", error);
+    }
     await clearTokens();
+    router.replace("/(auth)/login");
   },
 };
