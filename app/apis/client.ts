@@ -41,16 +41,21 @@ api.interceptors.request.use(async (config) => {
   }
   return config;
 });
-
+interface FailedRequest {
+  resolve: (token: string) => void;
+  reject: (error: any) => void;
+}
 let isRefreshing = false;
-let failedQueue: any[] = [];
+let failedQueue: FailedRequest[] = [];
 
-const processQueue = (error: any, token: string | null = null) => {
+const processQueue = (error: any | null, token: string | null) => {
   failedQueue.forEach((prom) => {
     if (error) {
       prom.reject(error);
-    } else {
+    } else if (token) {
       prom.resolve(token);
+    } else {
+      prom.reject(new Error("토큰 재발급에 성공했으나 토큰이 없습니다."));
     }
   });
   failedQueue = [];
