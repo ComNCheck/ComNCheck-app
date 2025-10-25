@@ -111,9 +111,11 @@ export default function Login() {
       console.log("🔄 [AUTH] 사용자 정보 조회 시작...");
       const memberResponse = await getMemberData();
       const userName = memberResponse.data.name;
-      console.log(`✅ [MEMBER] 사용자 이름: ${userName}`);
-
-      router.replace(`/(auth)/login/first?name=${userName}` as Href);
+      if (memberResponse?.data.checkStudentCard === true) {
+        router.replace("/(tabs)/notice");
+      } else {
+        router.replace(`/(auth)/login/first?name=${userName}` as Href);
+      }
     } catch (e: any) {
       console.error("❌ [AUTH] 로그인 오류:", e);
 

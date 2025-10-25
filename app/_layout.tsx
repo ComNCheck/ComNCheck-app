@@ -51,22 +51,22 @@ export default function RootLayout() {
     }
   }, [loaded]);
 
-  if (!loaded) {
-    return null;
-  }
-
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
       <GestureHandlerRootView style={{ flex: 1 }}>
         <Stack
           screenOptions={{
             headerShown: false,
-            headerTitleStyle: { fontFamily: "Pretendard-Bold" },
-            headerBackTitleStyle: { fontFamily: "Pretendard-Regular" },
+            headerTitleStyle: loaded
+              ? { fontFamily: "Pretendard-Bold" }
+              : undefined,
+            headerBackTitleStyle: loaded
+              ? { fontFamily: "Pretendard-Regular" }
+              : undefined,
           }}
         >
-          <Stack.Screen name="index" options={{ headerShown: false }} />
           <Stack.Screen name="splash" options={{ headerShown: false }} />
+          <Stack.Screen name="index" options={{ headerShown: false }} />
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="(auth)" options={{ headerShown: false }} />
           <Stack.Screen name="(setting)" options={{ headerShown: false }} />

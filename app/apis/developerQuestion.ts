@@ -14,3 +14,9 @@ export async function getAllQuestions() {
   );
   return response.data;
 }
+export async function getDevQuestions() {
+  const response = await api.get<DeveloperQuestion[]>(
+    "/api/v1/developer/questions"
+  );
+  return response.data;
+}
