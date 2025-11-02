@@ -73,17 +73,17 @@ const forceLogout = async () => {
 //응답 인터셉터
 api.interceptors.response.use(
   (res) => {
-    if (__DEV__) {
-      console.log(
-        "[HTTP Response]",
-        res.config.method?.toUpperCase(),
-        res.config.url,
-        "status:",
-        res.status,
-        "data:",
-        res.data
-      );
-    }
+    // if (__DEV__) {
+    //   console.log(
+    //     "[HTTP Response]",
+    //     res.config.method?.toUpperCase(),
+    //     res.config.url,
+    //     "status:",
+    //     res.status,
+    //     "data:",
+    //     res.data
+    //   );
+    // }
     return res;
   },
   async (error) => {
@@ -141,11 +141,23 @@ api.interceptors.response.use(
             if (!refreshToken) {
               throw new Error("리프레시 토큰이 없습니다.");
             }
+            // --- [로그 추가 1] ---
+            console.log(
+              "🔄 [Refresh API] 재발급 요청 전송. 사용할 리프레시 토큰:",
+              refreshToken
+            );
+            //
             const { data } = await api.post("/api/v1/member/refresh", null, {
               headers: {
                 Authorization: `Bearer ${refreshToken}`,
               },
             });
+            // --- [로그 추가 2] ---
+            console.log(
+              "✅ [Refresh API] 재발급 응답 받음. 새로 발급된 accessToken:",
+              data.accessToken
+            );
+            // ---------------------
             const newAccessToken = data.accessToken;
 
             if (!newAccessToken) {
