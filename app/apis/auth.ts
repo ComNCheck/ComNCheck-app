@@ -8,9 +8,6 @@ export function memberLoginByBody(body: LoginBody) {
     idToken: body.idToken,
   };
 
-  console.log("🔍 [API] 로그인 요청 시작:", payload);
-  console.log("🔍 [API] Base URL:", api.defaults.baseURL);
-
   return api
     .post<LoginResponse>("/api/v1/member/login", payload, {
       headers: {
@@ -37,7 +34,10 @@ export function memberLoginByBody(body: LoginBody) {
       throw error;
     });
 }
-
+export function memberLogout() {
+  //로그아웃
+  return api.post("/api/v1/member/phone/logout");
+}
 export function getMemberData() {
   //본인 정보 조회
   return api.get<AuthMember>("/api/v1/member");

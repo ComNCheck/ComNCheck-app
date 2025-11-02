@@ -1,8 +1,4 @@
-import {
-  DarkTheme,
-  DefaultTheme,
-  ThemeProvider,
-} from "@react-navigation/native";
+import { DefaultTheme, ThemeProvider } from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import { SplashScreen, Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
@@ -11,7 +7,6 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import "react-native-reanimated";
 
 import "@/global.css";
-import { useColorScheme } from "@/hooks/useColorScheme";
 import { useEffect } from "react";
 import { Text as RNText, TextInput as RNTextInput } from "react-native";
 interface DefaultPropsCompat {
@@ -21,7 +16,6 @@ interface DefaultPropsCompat {
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
   const [loaded] = useFonts({
     "Pretendard-Regular": require("../assets/fonts/Pretendard-Regular.ttf"),
     "Pretendard-Bold": require("../assets/fonts/Pretendard-Bold.ttf"),
@@ -52,7 +46,7 @@ export default function RootLayout() {
   }, [loaded]);
 
   return (
-    <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+    <ThemeProvider value={DefaultTheme}>
       <GestureHandlerRootView style={{ flex: 1 }}>
         <Stack
           screenOptions={{
